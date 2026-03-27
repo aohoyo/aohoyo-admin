@@ -193,8 +193,9 @@ onMounted(() => {
         row-key="id"
         border
         default-expand-all
+        style="width: 100%"
       >
-        <el-table-column prop="name" label="菜单名称" width="200" />
+        <el-table-column prop="name" label="菜单名称" min-width="180" />
         <el-table-column label="图标" width="80" align="center">
           <template #default="{ row }">
             <el-icon v-if="row.icon" :size="18">
@@ -202,8 +203,8 @@ onMounted(() => {
             </el-icon>
           </template>
         </el-table-column>
-        <el-table-column prop="path" label="路由路径" width="200" />
-        <el-table-column label="类型" width="100" align="center">
+        <el-table-column prop="path" label="路由路径" min-width="180" />
+        <el-table-column label="类型" width="90" align="center">
           <template #default="{ row }">
             <el-tag 
               :type="row.type === 'dir' ? 'primary' : row.type === 'menu' ? 'success' : 'warning'" 
@@ -213,7 +214,7 @@ onMounted(() => {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="sort" label="排序" width="80" align="center" />
+        <el-table-column prop="sort" label="排序" width="70" align="center" />
         <el-table-column label="状态" width="80" align="center">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small">
@@ -221,7 +222,7 @@ onMounted(() => {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <el-button v-if="row.type !== 'button'" type="primary" size="small" link @click="handleAdd(row.id)">
               新增

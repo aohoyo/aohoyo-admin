@@ -114,9 +114,17 @@ html, body {
 
 /* 暗黑模式组件适配 */
 .dark .el-card { background: var(--bg-color); border-color: var(--border-color); }
-.dark .el-input__wrapper { background: var(--bg-color); }
-.dark .el-table { --el-table-bg-color: var(--bg-color); }
+.dark .el-input__wrapper { background: var(--bg-color); box-shadow: 0 0 0 1px var(--border-color) inset; }
+.dark .el-table {
+  --el-table-bg-color: var(--bg-color);
+  --el-table-tr-bg-color: var(--bg-color);
+  --el-table-header-bg-color: var(--el-fill-color-light);
+  --el-table-row-hover-bg-color: var(--el-fill-color-light);
+  --el-table-border-color: var(--border-color);
+}
 .dark .el-dialog { background: var(--bg-color); }
+.dark .el-pagination button { background: var(--bg-color); }
+.dark .el-pagination .el-pager li { background: var(--bg-color); }
 
 /* ===== 链接 ===== */
 a { color: var(--el-color-primary); text-decoration: none; }
