@@ -3,6 +3,9 @@ import { computed, watch, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useTabsStore } from '@/stores/tabs'
 
+import { useThemeStore } from '@/stores/theme'
+
+const themeStore = useThemeStore()
 const route = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
@@ -123,7 +126,7 @@ document.addEventListener('click', () => {
           @click="handleClick(tab.path)"
           @contextmenu="(e) => handleContextMenu(e, tab.path)"
         >
-          <el-icon v-if="tab.icon" class="tab-icon">
+          <el-icon v-if="tab.icon && themeStore.tabsShowIcon" class="tab-icon">
             <component :is="tab.icon" />
           </el-icon>
           <span class="tab-title">{{ tab.title }}</span>
@@ -175,85 +178,87 @@ document.addEventListener('click', () => {
 .tabs-container {
   display: flex;
   align-items: center;
-  height: 30px;
-  padding: 0 8px;
-  background-color: var(--tabs-bg);
+  height: 44px;
+  padding: 0 12px;
+  background: var(--tabs-bg);
   border-top: 1px solid var(--border-color);
-  position: relative;
 }
 
-.tabs-scroll {
-  flex: 1;
-  overflow: hidden;
-}
+.tabs-scroll { flex: 1; overflow: hidden; }
 
 .tabs-wrapper {
   display: flex;
   align-items: center;
   gap: 4px;
   white-space: nowrap;
+  padding-top: 4px;
 }
 
 .tab-item {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   padding: 0 12px;
-  height: 26px;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  background-color: var(--bg-color);
+  height: 32px;
+  border-radius: 4px;
+  background: var(--bg-color);
   border: 1px solid var(--border-color);
   color: var(--tabs-text-color);
-  transition: all 0.2s;
+  font-size: 14px;
+  cursor: pointer;
   user-select: none;
+  transition: all 0.2s;
+}
+
+.tab-item:hover,
+.tab-item.is-active {
+  transform: translateY(-2px);
 }
 
 .tab-item:hover {
-  background-color: var(--el-color-primary-light-9);
+  background: var(--el-color-primary-light-9);
+  border-color: var(--el-color-primary-light-5);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .tab-item.is-active {
-  background-color: var(--el-color-primary);
+  background: var(--el-color-primary);
   border-color: var(--el-color-primary);
   color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.tab-icon {
+.tab-icon, .tab-title {
   font-size: 14px;
-  color: inherit;
-}
-
-.tab-title {
-  font-size: 12px;
   color: inherit;
 }
 
 .tab-close {
   font-size: 12px;
-  border-radius: 50%;
-  transition: all 0.2s;
   color: inherit;
+  margin-left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
 }
 
-.tab-close:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.tab-item.is-active .tab-close:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
+.tab-close:hover { background: rgba(0, 0, 0, 0.1); }
+.tab-item.is-active .tab-close:hover { background: rgba(255, 255, 255, 0.2); }
 
 /* 右键菜单 */
 .context-menu {
   position: fixed;
   z-index: 9999;
-  background-color: var(--bg-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
-  padding: 4px 0;
   min-width: 120px;
+  padding: 4px 0;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
 }
 
 .menu-item {
@@ -261,40 +266,24 @@ document.addEventListener('click', () => {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  cursor: pointer;
   color: var(--text-color-primary);
-  transition: background-color 0.2s;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 .menu-item:hover {
-  background-color: var(--el-color-primary-light-9);
+  background: var(--el-color-primary-light-9);
   color: var(--el-color-primary);
 }
 
 .menu-item.danger:hover {
-  background-color: var(--el-color-danger-light-9);
+  background: var(--el-color-danger-light-9);
   color: var(--el-color-danger);
 }
 
-.menu-item .el-icon {
-  font-size: 14px;
-  color: inherit;
-}
+.menu-item .el-icon { font-size: 14px; color: inherit; }
+.menu-divider { height: 1px; margin: 4px 0; background: var(--border-color); }
 
-.menu-divider {
-  height: 1px;
-  background-color: var(--border-color);
-  margin: 4px 0;
-}
-
-/* 过渡动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
+.fade-enter-active, .fade-leave-active { transition: opacity 0.15s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
 </style>

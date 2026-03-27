@@ -94,6 +94,7 @@ const handleReset = () => {
             type="textarea"
             :rows="3"
             placeholder="请输入备注"
+            style="width: 100%"
           />
         </el-form-item>
 

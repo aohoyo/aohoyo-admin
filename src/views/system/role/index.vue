@@ -96,13 +96,6 @@ const handleSearch = () => {
   loadData()
 }
 
-// 重置
-const handleReset = () => {
-  queryParams.keyword = ''
-  queryParams.page = 1
-  loadData()
-}
-
 // 加载数据
 const loadData = () => {
   loading.value = true
@@ -193,10 +186,7 @@ onMounted(() => {
             clearable
             @keyup.enter="handleSearch"
           />
-          <div>
-            <el-button type="primary" @click="handleSearch">搜索</el-button>
-            <el-button @click="handleReset">重置</el-button>
-          </div>
+          <el-button type="primary" @click="handleSearch">搜索</el-button>
         </div>
       </template>
 
@@ -216,7 +206,7 @@ onMounted(() => {
         <el-table-column prop="description" label="描述" />
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small">
+            <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small" effect="dark">
               {{ row.status === 1 ? '启用' : '禁用' }}
             </el-tag>
           </template>
@@ -224,7 +214,7 @@ onMounted(() => {
         <el-table-column prop="createTime" label="创建时间" width="170" />
         <el-table-column label="操作" width="150" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" link @click="handleEdit(row)">编辑</el-button>
+            <el-button size="small" link @click="handleEdit(row)">编辑</el-button>
             <el-button type="danger" size="small" link @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>

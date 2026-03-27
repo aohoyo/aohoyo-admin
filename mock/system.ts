@@ -1,5 +1,13 @@
 import type { MockMethod } from 'vite-plugin-mock'
 
+// Mock 日志
+const mockLog = (method: string, url: string, params: any, response: any) => {
+  console.group(`%c🎭 Mock Request: ${method} ${url}`, 'color: #9c27b0; font-weight: bold; font-size: 13px;')
+  console.log('📥 参数:', params)
+  console.log('📦 返回:', response)
+  console.groupEnd()
+}
+
 // 模拟用户数据
 const users = [
   { id: 1, username: 'admin', nickname: '超级管理员', email: 'admin@aohoyo.com', phone: '13800138000', status: 1, createTime: '2026-01-01 00:00:00', roles: ['admin'] },
@@ -16,14 +24,14 @@ const roles = [
 
 // 模拟菜单数据
 const menus = [
-  { id: 1, parentId: 0, name: '首页', path: '/dashboard', icon: 'ep:home-filled', sort: 1, status: 1 },
-  { id: 2, parentId: 0, name: '系统管理', path: '/system', icon: 'ep:setting', sort: 2, status: 1 },
-  { id: 3, parentId: 2, name: '用户管理', path: '/system/user', icon: 'ep:user', sort: 1, status: 1 },
-  { id: 4, parentId: 2, name: '角色管理', path: '/system/role', icon: 'ep:user-filled', sort: 2, status: 1 },
-  { id: 5, parentId: 2, name: '菜单管理', path: '/system/menu', icon: 'ep:menu', sort: 3, status: 1 },
-  { id: 6, parentId: 0, name: '示例页面', path: '/example', icon: 'ep:document', sort: 3, status: 1 },
-  { id: 7, parentId: 6, name: '表格示例', path: '/example/table', icon: 'ep:grid', sort: 1, status: 1 },
-  { id: 8, parentId: 6, name: '表单示例', path: '/example/form', icon: 'ep:edit-pen', sort: 2, status: 1 }
+  { id: 1, parentId: 0, name: '首页', path: '/dashboard', icon: 'HomeFilled', sort: 1, status: 1 },
+  { id: 2, parentId: 0, name: '系统管理', path: '/system', icon: 'Setting', sort: 2, status: 1 },
+  { id: 3, parentId: 2, name: '用户管理', path: '/system/user', icon: 'User', sort: 1, status: 1 },
+  { id: 4, parentId: 2, name: '角色管理', path: '/system/role', icon: 'UserFilled', sort: 2, status: 1 },
+  { id: 5, parentId: 2, name: '菜单管理', path: '/system/menu', icon: 'Menu', sort: 3, status: 1 },
+  { id: 6, parentId: 0, name: '示例页面', path: '/example', icon: 'Document', sort: 3, status: 1 },
+  { id: 7, parentId: 6, name: '表格示例', path: '/example/table', icon: 'Grid', sort: 1, status: 1 },
+  { id: 8, parentId: 6, name: '表单示例', path: '/example/form', icon: 'EditPen', sort: 2, status: 1 }
 ]
 
 export default [
@@ -39,7 +47,7 @@ export default [
         list = list.filter(u => u.username.includes(keyword) || u.nickname.includes(keyword))
       }
 
-      return {
+      const response = {
         code: 200,
         data: {
           list: list.slice((page - 1) * pageSize, page * pageSize),
@@ -47,6 +55,8 @@ export default [
         },
         message: 'success'
       }
+      mockLog('GET', '/api/system/user/list', query, response)
+      return response
     }
   },
 
@@ -57,7 +67,7 @@ export default [
     response: ({ query }: { query: { page: number; pageSize: number } }) => {
       const { page = 1, pageSize = 10 } = query
 
-      return {
+      const response = {
         code: 200,
         data: {
           list: roles.slice((page - 1) * pageSize, page * pageSize),
@@ -65,6 +75,8 @@ export default [
         },
         message: 'success'
       }
+      mockLog('GET', '/api/system/role/list', query, response)
+      return response
     }
   },
 
@@ -73,11 +85,13 @@ export default [
     url: '/api/system/menu/list',
     method: 'get',
     response: () => {
-      return {
+      const response = {
         code: 200,
         data: menus,
         message: 'success'
       }
+      mockLog('GET', '/api/system/menu/list', {}, response)
+      return response
     }
   }
 ] as MockMethod[]

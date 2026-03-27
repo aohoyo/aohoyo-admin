@@ -1,134 +1,48 @@
 /**
  * 全局样式
- * 
- * CSS 变量说明：
- * - 文字颜色：--text-color-* （自动适配明暗模式）
- * - 背景颜色：--bg-color-*
- * - 边框颜色：--border-color
- * - 圆角：--border-radius（可在主题设置中调整）
+ * 依赖 Element Plus 自带的暗黑模式
  */
 
-/* ===== CSS 变量 ===== */
+/* 主题色 */
 :root {
-  /* 主题色 */
   --el-color-primary: #F37021;
-  
-  /* 圆角 */
   --border-radius: 4px;
-  --border-radius-sm: 2px;
-  --border-radius-lg: 8px;
-  
-  /* 文字颜色 */
-  --text-color-primary: #303133;
-  --text-color-regular: #606266;
-  --text-color-secondary: #909399;
-  
-  /* 边框 */
-  --border-color: #e4e7ed;
-  
-  /* 背景 */
-  --bg-color: #fff;
-  --bg-color-page: #f5f7fa;
-  
-  /* 侧边栏 */
   --sidebar-bg: #fff;
   --sidebar-text-color: #303133;
   --sidebar-hover-bg: #f5f7fa;
-  
-  /* 头部 */
-  --header-bg: #fff;
-  --header-text-color: #303133;
-  
-  /* 标签栏 */
-  --tabs-bg: #f5f7fa;
 }
 
-/* ===== 暗黑模式 ===== */
 .dark {
-  --text-color-primary: #e5eaf3;
-  --text-color-regular: #cfd3dc;
-  --text-color-secondary: #a3a6ad;
-  --border-color: #4c4d4f;
-  --bg-color: #141414;
-  --bg-color-page: #1d1e1f;
-  --sidebar-bg: #1d1e1f;
-  --sidebar-text-color: #e5eaf3;
-  --sidebar-hover-bg: #262727;
-  --header-bg: #1d1e1f;
-  --header-text-color: #e5eaf3;
-  --tabs-bg: #1d1e1f;
-  
-  /* Element Plus 暗黑模式 */
-  --el-bg-color: #1d1e1f;
-  --el-bg-color-page: #141414;
-  --el-text-color-primary: #e5eaf3;
-  --el-text-color-regular: #cfd3dc;
-  --el-text-color-secondary: #a3a6ad;
-  --el-border-color: #4c4d4f;
-  --el-fill-color: #303030;
-  --el-fill-color-light: #262727;
-}
-
-/* ===== 侧边栏主题 ===== */
-.sidebar-dark {
   --sidebar-bg: #1d1e1f;
   --sidebar-text-color: #e5eaf3;
   --sidebar-hover-bg: #262727;
 }
 
-/* ===== 头部主题 ===== */
-.header-dark {
-  --header-bg: #1d1e1f;
-  --header-text-color: #e5eaf3;
-}
-
-/* ===== 全局样式 ===== */
+/* 全局重置 */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 14px;
-  color: var(--text-color-primary);
-  background-color: var(--bg-color-page);
-}
+html, body, #app { width: 100%; height: 100%; }
 
-#app { width: 100%; height: 100%; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 
 /* 滚动条 */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,.2); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.3); }
 
 /* 特殊模式 */
 .gray-mode { filter: grayscale(100%); }
 .color-weak { filter: invert(80%); }
 
-/* ===== Element Plus 覆盖 ===== */
-.el-card { border-radius: var(--border-radius); }
-.el-button { border-radius: var(--border-radius); }
-.el-input__wrapper { border-radius: var(--border-radius); }
-.el-dialog { border-radius: var(--border-radius-lg); }
-.el-dropdown-menu { border-radius: var(--border-radius); }
+/* 圆角 */
+.el-card, .el-button, .el-input__wrapper { border-radius: var(--border-radius); }
+.el-dialog { border-radius: calc(var(--border-radius) * 2); }
 
-/* 暗黑模式组件适配 */
-.dark .el-card { background: var(--bg-color); border-color: var(--border-color); }
-.dark .el-input__wrapper { background: var(--bg-color); box-shadow: 0 0 0 1px var(--border-color) inset; }
-.dark .el-table {
-  --el-table-bg-color: var(--bg-color);
-  --el-table-tr-bg-color: var(--bg-color);
-  --el-table-header-bg-color: var(--el-fill-color-light);
-  --el-table-row-hover-bg-color: var(--el-fill-color-light);
-  --el-table-border-color: var(--border-color);
+/* 下拉菜单 hover 样式 - 背景橙色，文字白色 */
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  color: #fff !important;
+  background-color: var(--el-color-primary) !important;
 }
-.dark .el-dialog { background: var(--bg-color); }
-.dark .el-pagination button { background: var(--bg-color); }
-.dark .el-pagination .el-pager li { background: var(--bg-color); }
 
-/* ===== 链接 ===== */
-a { color: var(--el-color-primary); text-decoration: none; }
-a:hover { color: var(--el-color-primary-light-3); }
-
-/* ===== 选中文字 ===== */
-::selection { background: var(--el-color-primary-light-8); color: var(--el-color-primary); }
+/* 编辑按钮蓝色 */
+.el-button.is-link:not(.el-button--primary):not(.el-button--success):not(.el-button--warning):not(.el-button--danger):not(.el-button--info) { color: #1677ff; }
+.el-button.is-link:not(.el-button--primary):not(.el-button--success):not(.el-button--warning):not(.el-button--danger):not(.el-button--info):hover { color: #409eff; }

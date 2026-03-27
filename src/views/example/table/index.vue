@@ -31,14 +31,14 @@ const getStatusText = (status: number) => status === 1 ? '启用' : '禁用'
         <el-table-column prop="email" label="邮箱" />
         <el-table-column label="状态" width="100">
           <template #default="{ row }">
-            <el-tag :type="getStatusType(row.status)" size="small">
+            <el-tag :type="getStatusType(row.status)" size="small" effect="dark">
               {{ getStatusText(row.status) }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180">
           <template #default>
-            <el-button type="primary" size="small" link>编辑</el-button>
+            <el-button size="small" link>编辑</el-button>
             <el-button type="danger" size="small" link>删除</el-button>
           </template>
         </el-table-column>

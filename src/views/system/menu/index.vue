@@ -209,6 +209,7 @@ onMounted(() => {
             <el-tag 
               :type="row.type === 'dir' ? 'primary' : row.type === 'menu' ? 'success' : 'warning'" 
               size="small"
+              effect="dark"
             >
               {{ row.type === 'dir' ? '目录' : row.type === 'menu' ? '菜单' : '按钮' }}
             </el-tag>
@@ -217,7 +218,7 @@ onMounted(() => {
         <el-table-column prop="sort" label="排序" width="70" align="center" />
         <el-table-column label="状态" width="80" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small">
+            <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small" effect="dark">
               {{ row.status === 1 ? '启用' : '禁用' }}
             </el-tag>
           </template>
@@ -227,7 +228,7 @@ onMounted(() => {
             <el-button v-if="row.type !== 'button'" type="primary" size="small" link @click="handleAdd(row.id)">
               新增
             </el-button>
-            <el-button type="primary" size="small" link @click="handleEdit(row)">
+            <el-button size="small" link @click="handleEdit(row)">
               编辑
             </el-button>
             <el-button type="danger" size="small" link @click="handleDelete(row)">

@@ -1,5 +1,13 @@
 import type { MockMethod } from 'vite-plugin-mock'
 
+// Mock 日志
+const mockLog = (method: string, url: string, params: any, response: any) => {
+  console.group(`%c🎭 Mock Request: ${method} ${url}`, 'color: #9c27b0; font-weight: bold; font-size: 13px;')
+  console.log('📥 参数:', params)
+  console.log('📦 返回:', response)
+  console.groupEnd()
+}
+
 export default [
   // 登录
   {
@@ -9,7 +17,7 @@ export default [
       const { username, password } = body
 
       if (username === 'admin' && password === 'admin123') {
-        return {
+        const response = {
           code: 200,
           data: {
             token: 'mock-token-' + Date.now(),
@@ -26,13 +34,17 @@ export default [
           },
           message: '登录成功'
         }
+        mockLog('POST', '/api/auth/login', body, response)
+        return response
       }
 
-      return {
+      const response = {
         code: 401,
         data: null,
         message: '用户名或密码错误'
       }
+      mockLog('POST', '/api/auth/login', body, response)
+      return response
     }
   },
 
@@ -41,7 +53,7 @@ export default [
     url: '/api/user/info',
     method: 'get',
     response: () => {
-      return {
+      const response = {
         code: 200,
         data: {
           id: 1,
@@ -55,6 +67,8 @@ export default [
         },
         message: 'success'
       }
+      mockLog('GET', '/api/user/info', {}, response)
+      return response
     }
   },
 
@@ -63,11 +77,13 @@ export default [
     url: '/api/auth/logout',
     method: 'post',
     response: () => {
-      return {
+      const response = {
         code: 200,
         data: null,
         message: '退出成功'
       }
+      mockLog('POST', '/api/auth/logout', {}, response)
+      return response
     }
   }
 ] as MockMethod[]

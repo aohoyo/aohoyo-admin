@@ -99,7 +99,7 @@ const handleChangePassword = async () => {
             </el-avatar>
             <h3 class="username">{{ userInfo?.nickname || '用户' }}</h3>
             <p class="role">
-              <el-tag v-for="role in userInfo?.roles" :key="role" size="small">
+              <el-tag v-for="role in userInfo?.roles" :key="role" size="small" type="primary" effect="dark">
                 {{ role }}
               </el-tag>
             </p>

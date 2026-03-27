@@ -1,23 +1,3 @@
-/**
- * Axios 请求封装
- * 
- * 配置说明：
- * - baseURL: API 基础地址，在 .env 文件中配置 VITE_APP_BASE_API
- * - timeout: 请求超时时间，默认 30 秒
- * - enableLog: 是否启用日志，开发环境默认启用
- * 
- * 使用示例：
- * ```ts
- * import request from '@/api/request'
- * 
- * // GET 请求
- * const data = await request.get('/api/user/list', { page: 1 })
- * 
- * // POST 请求
- * const result = await request.post('/api/user', { name: 'test' })
- * ```
- */
-
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -37,6 +17,13 @@ interface RequestConfig {
   baseURL?: string
   timeout?: number
   enableLog?: boolean
+}
+
+/** 扩展 Axios 配置，添加自定义 meta */
+declare module 'axios' {
+  interface AxiosRequestConfig {
+    meta?: { requestTime: number }
+  }
 }
 
 // ============ 配置 ============
@@ -68,29 +55,39 @@ const logger = {
   
   request(config: InternalAxiosRequestConfig) {
     if (!this.enabled) return
-    console.log(
-      `%c🚀 REQUEST ${config.method?.toUpperCase()} ${config.url}`,
-      'color: #42b983; font-weight: bold',
-      '\n参数:', config.params || config.data || {}
-    )
+    const method = config.method?.toUpperCase() || 'GET'
+    const url = config.url || ''
+    const params = config.params || config.data || {}
+    
+    console.group(`%c📤 API Request: ${method} ${url}`, 'color: #42b983; font-weight: bold; font-size: 13px;')
+    console.log('📥 参数:', params)
+    console.log('🔗 完整URL:', `${config.baseURL}${url}`)
+    console.log('📋 Headers:', config.headers)
+    console.groupEnd()
   },
   
   response(response: AxiosResponse) {
     if (!this.enabled) return
-    console.log(
-      `%c✅ RESPONSE ${response.config.url}`,
-      'color: #67c23a; font-weight: bold',
-      '\n数据:', response.data
-    )
+    const url = response.config.url || ''
+    const startTime = response.config.meta?.requestTime || 0
+    const duration = startTime ? Date.now() - startTime : 0
+    
+    console.group(`%c📥 API Response: ${url}`, 'color: #67c23a; font-weight: bold; font-size: 13px;')
+    console.log('📊 状态码:', response.status)
+    console.log('📦 返回数据:', response.data)
+    console.log('⏱️ 耗时:', `${duration}ms`)
+    console.groupEnd()
   },
   
   error(error: any) {
     if (!this.enabled) return
-    console.error(
-      `%c❌ ERROR ${error.config?.url || 'unknown'}`,
-      'color: #f56c6c; font-weight: bold',
-      '\n错误:', error.message
-    )
+    const url = error.config?.url || 'unknown'
+    
+    console.group(`%c❌ API Error: ${url}`, 'color: #f56c6c; font-weight: bold; font-size: 13px;')
+    console.log('❗ 错误信息:', error.message)
+    console.log('📊 状态码:', error.response?.status)
+    console.log('📦 响应数据:', error.response?.data)
+    console.groupEnd()
   }
 }
 
@@ -107,6 +104,9 @@ const service: AxiosInstance = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
+    // 记录请求开始时间
+    config.meta = { requestTime: Date.now() }
+    
     // 添加 Token
     const { token } = useUserStore()
     if (token) {

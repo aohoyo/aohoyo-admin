@@ -64,13 +64,6 @@ const handleSearch = () => {
   loadData()
 }
 
-// 重置
-const handleReset = () => {
-  queryParams.keyword = ''
-  queryParams.page = 1
-  loadData()
-}
-
 // 加载数据
 const loadData = () => {
   loading.value = true
@@ -152,10 +145,7 @@ onMounted(() => {
             clearable
             @keyup.enter="handleSearch"
           />
-          <div>
-            <el-button type="primary" @click="handleSearch">搜索</el-button>
-            <el-button @click="handleReset">重置</el-button>
-          </div>
+          <el-button type="primary" @click="handleSearch">搜索</el-button>
         </div>
       </template>
 
@@ -176,7 +166,7 @@ onMounted(() => {
         <el-table-column prop="phone" label="手机号" width="130" />
         <el-table-column label="角色" width="150">
           <template #default="{ row }">
-            <el-tag v-for="role in row.roles" :key="role" size="small" class="mr-1 role-tag">
+            <el-tag v-for="role in row.roles" :key="role" size="small" class="mr-1" type="primary" effect="dark">
               {{ role }}
             </el-tag>
           </template>
@@ -194,7 +184,7 @@ onMounted(() => {
         <el-table-column prop="createTime" label="创建时间" width="170" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" link v-permission="'user:edit'" @click="handleEdit(row)">
+            <el-button size="small" link v-permission="'user:edit'" @click="handleEdit(row)">
               编辑
             </el-button>
             <el-button type="danger" size="small" link v-permission="'user:delete'" @click="handleDelete(row)">
@@ -285,14 +275,5 @@ onMounted(() => {
 
 .justify-end {
   justify-content: flex-end;
-}
-
-/* 角色标签 - 文字颜色不跟随主题色 */
-.role-tag {
-  color: var(--text-color-primary) !important;
-}
-
-.role-tag :deep(.el-tag__content) {
-  color: var(--text-color-primary) !important;
 }
 </style>

@@ -3,211 +3,156 @@ import { ref, computed } from 'vue'
 import { useThemeStore } from '@/stores/theme'
 
 const themeStore = useThemeStore()
-
-// 显示设置面板
 const visible = ref(false)
 
-// 主题预设
 const presets = computed(() => themeStore.presets)
-
-// 自定义颜色
 const customColor = ref(themeStore.primaryColor)
 
-// 选择主题色
 const handleSelectColor = (color: string) => {
   themeStore.setPrimaryColor(color)
   customColor.value = color
 }
 
-// 自定义颜色变化
-const handleCustomColorChange = (color: string) => {
-  themeStore.setPrimaryColor(color)
-}
-
-// 切换暗黑模式
-const handleToggleDark = () => {
-  themeStore.toggleDark()
-}
-
-// 圆角变化
-const handleBorderRadiusChange = (val: number) => {
-  themeStore.setBorderRadius(val)
-}
-
-// 打开设置
-const open = () => {
-  visible.value = true
-}
-
-// 暴露方法
+const open = () => { visible.value = true }
 defineExpose({ open })
 </script>
 
 <template>
   <el-drawer v-model="visible" title="主题设置" size="300px">
-    <div class="theme-setting">
+    <div class="settings">
       <!-- 暗黑模式 -->
-      <div class="setting-item">
-        <span class="label">暗黑模式</span>
-        <el-switch
-          :model-value="themeStore.mode === 'dark'"
-          @change="handleToggleDark"
-        />
+      <div class="item">
+        <span>暗黑模式</span>
+        <el-switch :model-value="themeStore.mode === 'dark'" @change="themeStore.toggleDark" />
       </div>
 
       <!-- 主题色 -->
-      <div class="setting-item">
-        <span class="label">主题色</span>
-        <div class="color-list">
+      <div class="item">
+        <span>主题色</span>
+        <div class="colors">
           <div
-            v-for="preset in presets"
-            :key="preset.primary"
-            class="color-item"
-            :class="{ active: themeStore.primaryColor === preset.primary }"
-            :style="{ backgroundColor: preset.primary }"
-            @click="handleSelectColor(preset.primary)"
+            v-for="p in presets"
+            :key="p.primary"
+            class="color"
+            :class="{ active: themeStore.primaryColor === p.primary }"
+            :style="{ background: p.primary }"
+            @click="handleSelectColor(p.primary)"
           >
-            <el-icon v-if="themeStore.primaryColor === preset.primary" color="#fff">
-              <Check />
-            </el-icon>
+            <el-icon v-if="themeStore.primaryColor === p.primary" color="#fff"><Check /></el-icon>
           </div>
-          <!-- 自定义颜色 -->
-          <el-color-picker
-            v-model="customColor"
-            :teleported="false"
-            @change="handleCustomColorChange"
-          />
+          <!-- 自定义 - 彩虹背景 -->
+          <div class="color rainbow" :class="{ active: !presets.some(p => p.primary === themeStore.primaryColor) }">
+            <el-color-picker v-model="customColor" size="small" @change="handleSelectColor" />
+          </div>
         </div>
       </div>
 
-      <!-- 侧边栏主题 -->
-      <div class="setting-item">
-        <span class="label">侧边栏主题</span>
-        <el-radio-group
-          :model-value="themeStore.sidebarTheme"
-          @change="(val: string) => themeStore.setSidebarTheme(val as 'light' | 'dark')"
-        >
-          <el-radio value="light">浅色</el-radio>
-          <el-radio value="dark">深色</el-radio>
-        </el-radio-group>
+      <!-- 圆角 -->
+      <div class="item">
+        <span>圆角: {{ themeStore.borderRadius }}px</span>
+        <el-slider :model-value="themeStore.borderRadius" :min="0" :max="16" @input="themeStore.setBorderRadius" />
       </div>
 
-      <!-- 头部主题 -->
-      <div class="setting-item">
-        <span class="label">头部主题</span>
-        <el-radio-group
-          :model-value="themeStore.headerTheme"
-          @change="(val: string) => themeStore.setHeaderTheme(val as 'light' | 'dark')"
-        >
-          <el-radio value="light">浅色</el-radio>
-          <el-radio value="dark">深色</el-radio>
-        </el-radio-group>
+      <!-- 功能开关 -->
+      <div class="divider">功能设置</div>
+
+      <div class="item">
+        <span>锁屏</span>
+        <el-switch :model-value="themeStore.lockScreenEnabled" @change="themeStore.toggleLockScreen" />
       </div>
 
-      <!-- 圆角大小 -->
-      <div class="setting-item">
-        <span class="label">圆角大小: {{ themeStore.borderRadius }}px</span>
-        <el-slider
-          :model-value="themeStore.borderRadius"
-          :min="0"
-          :max="16"
-          :step="1"
-          @input="handleBorderRadiusChange"
-        />
+      <div class="item">
+        <span>通知</span>
+        <el-switch :model-value="themeStore.notificationEnabled" @change="themeStore.toggleNotification" />
       </div>
 
-      <!-- 动画效果 -->
-      <div class="setting-item">
-        <span class="label">动画效果</span>
-        <el-switch
-          :model-value="themeStore.animation"
-          @change="themeStore.toggleAnimation"
-        />
+      <div class="item">
+        <span>全屏</span>
+        <el-switch :model-value="themeStore.fullscreenEnabled" @change="themeStore.toggleFullscreen" />
       </div>
 
-      <!-- 灰色模式 -->
-      <div class="setting-item">
-        <span class="label">灰色模式</span>
-        <el-switch
-          :model-value="themeStore.grayMode"
-          @change="themeStore.toggleGrayMode"
-        />
+      <div class="item">
+        <span>刷新</span>
+        <el-switch :model-value="themeStore.refreshEnabled" @change="themeStore.toggleRefresh" />
       </div>
 
-      <!-- 色弱模式 -->
-      <div class="setting-item">
-        <span class="label">色弱模式</span>
-        <el-switch
-          :model-value="themeStore.colorWeak"
-          @change="themeStore.toggleColorWeak"
-        />
+      <div class="divider">标签设置</div>
+
+      <div class="item">
+        <span>标签</span>
+        <el-switch :model-value="themeStore.tabsEnabled" @change="themeStore.toggleTabs" />
+      </div>
+
+      <div class="item">
+        <span>标签图标</span>
+        <el-switch :model-value="themeStore.tabsShowIcon" @change="themeStore.toggleTabsIcon" :disabled="!themeStore.tabsEnabled" />
+      </div>
+
+      <!-- 特殊模式 -->
+      <div class="divider">特殊模式</div>
+
+      <div class="item">
+        <span>灰色模式</span>
+        <el-switch :model-value="themeStore.grayMode" @change="themeStore.toggleGrayMode" />
+      </div>
+
+      <div class="item">
+        <span>色弱模式</span>
+        <el-switch :model-value="themeStore.colorWeak" @change="themeStore.toggleColorWeak" />
+      </div>
+
+      <div class="item">
+        <span>动画效果</span>
+        <el-switch :model-value="themeStore.animation" @change="themeStore.toggleAnimation" />
       </div>
     </div>
   </el-drawer>
 </template>
 
 <style scoped>
-.theme-setting {
-  padding: 0 20px;
-}
+.settings { padding: 0 16px; }
 
-.setting-item {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.setting-item:last-child {
-  border-bottom: none;
-}
-
-.label {
-  display: block;
-  margin-bottom: 12px;
-  font-size: 14px;
-  color: var(--text-color-primary);
-}
-
-.color-list {
+.item {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--el-border-color-lighter);
 }
 
-.color-item {
-  width: 32px;
-  height: 32px;
+.item > span { font-size: 14px; color: var(--el-text-color-primary); }
+
+.divider {
+  padding: 16px 0 8px;
+  font-size: 13px;
+  color: var(--el-text-color-secondary);
+}
+
+.colors { display: flex; gap: 8px; }
+
+.color {
+  width: 28px;
+  height: 28px;
   border-radius: 4px;
+  border: 2px solid transparent;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.2s;
-  border: 2px solid transparent;
 }
 
-.color-item:hover {
-  transform: scale(1.1);
+.color:hover { transform: scale(1.1); }
+.color.active { border-color: var(--el-color-primary); }
+
+.color.rainbow {
+  background: conic-gradient(from 0deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff, #5f27cd, #ff6b6b);
 }
 
-.color-item.active {
-  border-color: var(--el-color-primary);
-}
-
-/* 颜色选择器样式 */
-:deep(.el-color-picker) {
-  width: 32px;
-  height: 32px;
-}
-
-:deep(.el-color-picker__trigger) {
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 4px !important;
-  padding: 0 !important;
-}
-
-:deep(.el-color-picker__color) {
-  border-radius: 4px !important;
+.color.rainbow :deep(.el-color-picker__trigger) {
+  width: 24px !important;
+  height: 24px !important;
+  border: none !important;
+  background: transparent !important;
 }
 </style>

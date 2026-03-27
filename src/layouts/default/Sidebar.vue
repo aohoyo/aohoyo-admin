@@ -138,8 +138,7 @@ const toggleCollapse = () => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: var(--sidebar-bg);
-  transition: background-color 0.3s ease;
+  background: var(--sidebar-bg);
 }
 
 .sidebar-logo {
@@ -147,38 +146,27 @@ const toggleCollapse = () => {
   align-items: center;
   height: 50px;
   padding: 0 16px;
-  cursor: pointer;
   border-bottom: 1px solid var(--border-color);
-  transition: all 0.3s;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-.sidebar-logo:hover {
-  background-color: var(--sidebar-hover-bg);
-}
+.sidebar-logo:hover { background: var(--sidebar-hover-bg); }
 
-.logo-img {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-}
+.logo-img { width: 32px; height: 32px; flex-shrink: 0; }
 
 .logo-text {
   margin-left: 12px;
   font-size: 16px;
   font-weight: 600;
   color: var(--sidebar-text-color);
-  white-space: nowrap;
-  overflow: hidden;
 }
 
-.sidebar-menu-wrapper {
-  flex: 1;
-  overflow: hidden;
-}
+.sidebar-menu-wrapper { flex: 1; overflow: hidden; }
 
 .sidebar-menu-wrapper :deep(.el-menu) {
   border-right: none;
-  background-color: transparent;
+  background: transparent;
 }
 
 .sidebar-menu-wrapper :deep(.el-menu-item),
@@ -186,37 +174,35 @@ const toggleCollapse = () => {
   height: 48px;
   line-height: 48px;
   color: var(--sidebar-text-color);
+  transition: all 0.2s;
 }
 
 .sidebar-menu-wrapper :deep(.el-menu-item:hover),
-.sidebar-menu-wrapper :deep(.el-sub-menu__title:hover) {
-  background-color: var(--sidebar-hover-bg);
+.sidebar-menu-wrapper :deep(.el-sub-menu__title:hover),
+.sidebar-menu-wrapper :deep(.el-menu-item.is-active) {
+  background: var(--el-color-primary-light-9);
+  transform: translateX(4px);
 }
 
 .sidebar-menu-wrapper :deep(.el-menu-item.is-active) {
-  color: var(--sidebar-text-color);
-  background-color: var(--el-color-primary-light-9);
   border-right: 3px solid var(--el-color-primary);
 }
 
-/* 子菜单样式 */
-.sidebar-menu-wrapper :deep(.el-sub-menu .el-menu-item) {
-  padding-left: 50px !important;
-}
+.sidebar-menu-wrapper :deep(.el-sub-menu .el-menu-item) { padding-left: 50px !important; }
 
 .sidebar-collapse-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 40px;
-  cursor: pointer;
   border-top: 1px solid var(--border-color);
   color: var(--sidebar-text-color);
+  cursor: pointer;
   transition: all 0.3s;
 }
 
 .sidebar-collapse-btn:hover {
-  background-color: var(--sidebar-hover-bg);
+  background: var(--sidebar-hover-bg);
   color: var(--el-color-primary);
 }
 </style>
