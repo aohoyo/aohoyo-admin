@@ -1,131 +1,87 @@
 /**
- * 深拷贝
+ * 工具函数库
+ * 
+ * 包含：深拷贝、防抖节流、URL处理、文件下载、剪贴板等
  */
+
+// ===== 对象操作 =====
+
+/** 深拷贝 */
 export function deepClone<T>(obj: T): T {
-  if (obj === null || typeof obj !== 'object') {
-    return obj
-  }
-
-  if (obj instanceof Date) {
-    return new Date(obj.getTime()) as T
-  }
-
-  if (obj instanceof Array) {
-    return obj.map(item => deepClone(item)) as T
-  }
-
-  if (obj instanceof Object) {
-    const copy = {} as T
-    Object.keys(obj).forEach(key => {
-      (copy as any)[key] = deepClone((obj as any)[key])
-    })
-    return copy
-  }
-
-  return obj
+  if (!obj || typeof obj !== 'object') return obj
+  if (obj instanceof Date) return new Date(obj.getTime()) as T
+  if (Array.isArray(obj)) return obj.map(deepClone) as T
+  
+  const copy = {} as T
+  Object.keys(obj).forEach(key => {
+    (copy as any)[key] = deepClone((obj as any)[key])
+  })
+  return copy
 }
 
-/**
- * 防抖
- */
-export function debounce<T extends (...args: any[]) => any>(
-  fn: T,
-  delay: number = 300
-): (...args: Parameters<T>) => void {
-  let timer: ReturnType<typeof setTimeout> | null = null
-  return function (this: any, ...args: Parameters<T>) {
-    if (timer) clearTimeout(timer)
-    timer = setTimeout(() => {
-      fn.apply(this, args)
-      timer = null
-    }, delay)
+/** 判断是否为空 */
+export function isEmpty(val: any): boolean {
+  if (val == null) return true
+  if (typeof val === 'string') return !val.trim()
+  if (Array.isArray(val)) return !val.length
+  if (typeof val === 'object') return !Object.keys(val).length
+  return false
+}
+
+// ===== 函数工具 =====
+
+/** 防抖 */
+export function debounce<T extends (...args: any[]) => any>(fn: T, delay = 300) {
+  let timer: ReturnType<typeof setTimeout>
+  return function(this: any, ...args: Parameters<T>) {
+    clearTimeout(timer)
+    timer = setTimeout(() => fn.apply(this, args), delay)
   }
 }
 
-/**
- * 节流
- */
-export function throttle<T extends (...args: any[]) => any>(
-  fn: T,
-  delay: number = 300
-): (...args: Parameters<T>) => void {
-  let lastTime = 0
-  return function (this: any, ...args: Parameters<T>) {
+/** 节流 */
+export function throttle<T extends (...args: any[]) => any>(fn: T, delay = 300) {
+  let last = 0
+  return function(this: any, ...args: Parameters<T>) {
     const now = Date.now()
-    if (now - lastTime >= delay) {
+    if (now - last >= delay) {
+      last = now
       fn.apply(this, args)
-      lastTime = now
     }
   }
 }
 
-/**
- * 生成 UUID
- */
-export function generateUUID(): string {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0
-    const v = c === 'x' ? r : (r & 0x3) | 0x8
-    return v.toString(16)
-  })
-}
+// ===== URL 处理 =====
 
-/**
- * 判断是否为空
- */
-export function isEmpty(value: any): boolean {
-  if (value === null || value === undefined) return true
-  if (typeof value === 'string') return value.trim() === ''
-  if (Array.isArray(value)) return value.length === 0
-  if (typeof value === 'object') return Object.keys(value).length === 0
-  return false
-}
-
-/**
- * 对象转 URL 参数
- */
-export function objectToQueryString(obj: Record<string, any>): string {
-  return Object.keys(obj)
-    .filter(key => obj[key] !== undefined && obj[key] !== null && obj[key] !== '')
-    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`)
+/** 对象转查询字符串 */
+export function objectToQuery(obj: Record<string, any>): string {
+  return Object.entries(obj)
+    .filter(([, v]) => v != null && v !== '')
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
     .join('&')
 }
 
-/**
- * URL 参数转对象
- */
-export function queryStringToObject(query: string): Record<string, string> {
-  const result: Record<string, string> = {}
-  if (!query) return result
-
-  query
-    .replace(/^\?/, '')
-    .split('&')
-    .forEach(item => {
-      const [key, value] = item.split('=')
-      if (key) {
-        result[decodeURIComponent(key)] = decodeURIComponent(value || '')
-      }
+/** 查询字符串转对象 */
+export function queryToObject(query: string): Record<string, string> {
+  return Object.fromEntries(
+    query.replace(/^\?/, '').split('&').filter(Boolean).map(p => {
+      const [k, v = ''] = p.split('=')
+      return [decodeURIComponent(k), decodeURIComponent(v)]
     })
-
-  return result
+  )
 }
 
-/**
- * 下载文件
- */
-export function downloadFile(url: string, filename?: string): void {
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename || ''
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+// ===== 文件操作 =====
+
+/** 下载文件 */
+export function downloadFile(url: string, name?: string) {
+  const a = document.createElement('a')
+  a.href = url
+  a.download = name || ''
+  a.click()
 }
 
-/**
- * 复制到剪贴板
- */
+/** 复制到剪贴板 */
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text)
@@ -135,27 +91,26 @@ export async function copyToClipboard(text: string): Promise<boolean> {
   }
 }
 
-/**
- * 格式化文件大小
- */
+/** 格式化文件大小 */
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 B'
-
-  const units = ['B', 'KB', 'MB', 'GB', 'TB']
-  const k = 1024
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + units[i]
+  if (!bytes) return '0 B'
+  const units = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(1024))
+  return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + units[i]
 }
 
-/**
- * 生成随机字符串
- */
-export function randomString(length: number = 16): string {
+// ===== 其他 =====
+
+/** 生成 UUID */
+export function uuid(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0
+    return (c === 'x' ? r : r & 3 | 8).toString(16)
+  })
+}
+
+/** 随机字符串 */
+export function randomStr(len = 16): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  let result = ''
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return result
+  return Array.from({ length: len }, () => chars[Math.random() * chars.length | 0]).join('')
 }

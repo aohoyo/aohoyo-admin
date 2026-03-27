@@ -1,4 +1,14 @@
-/* CSS 变量定义 */
+/**
+ * 全局样式
+ * 
+ * CSS 变量说明：
+ * - 文字颜色：--text-color-* （自动适配明暗模式）
+ * - 背景颜色：--bg-color-*
+ * - 边框颜色：--border-color
+ * - 圆角：--border-radius（可在主题设置中调整）
+ */
+
+/* ===== CSS 变量 ===== */
 :root {
   /* 主题色 */
   --el-color-primary: #F37021;
@@ -8,272 +18,109 @@
   --border-radius-sm: 2px;
   --border-radius-lg: 8px;
   
-  /* 文字颜色 - 固定黑白 */
+  /* 文字颜色 */
   --text-color-primary: #303133;
   --text-color-regular: #606266;
   --text-color-secondary: #909399;
-  --text-color-placeholder: #c0c4cc;
   
-  /* 边框颜色 */
+  /* 边框 */
   --border-color: #e4e7ed;
-  --border-color-light: #ebeef5;
   
-  /* 背景色 */
-  --bg-color: #ffffff;
+  /* 背景 */
+  --bg-color: #fff;
   --bg-color-page: #f5f7fa;
   
   /* 侧边栏 */
-  --sidebar-bg: #ffffff;
+  --sidebar-bg: #fff;
   --sidebar-text-color: #303133;
   --sidebar-hover-bg: #f5f7fa;
   
   /* 头部 */
-  --header-bg: #ffffff;
+  --header-bg: #fff;
   --header-text-color: #303133;
   
   /* 标签栏 */
   --tabs-bg: #f5f7fa;
-  --tabs-text-color: #303133;
-  
-  /* 卡片 */
-  --card-bg: #ffffff;
 }
 
-/* 暗黑模式 */
+/* ===== 暗黑模式 ===== */
 .dark {
   --text-color-primary: #e5eaf3;
   --text-color-regular: #cfd3dc;
   --text-color-secondary: #a3a6ad;
-  --text-color-placeholder: #8d9095;
-  
   --border-color: #4c4d4f;
-  --border-color-light: #414243;
-  
   --bg-color: #141414;
   --bg-color-page: #1d1e1f;
-  
+  --sidebar-bg: #1d1e1f;
+  --sidebar-text-color: #e5eaf3;
+  --sidebar-hover-bg: #262727;
+  --header-bg: #1d1e1f;
+  --header-text-color: #e5eaf3;
   --tabs-bg: #1d1e1f;
-  --tabs-text-color: #e5eaf3;
   
-  --card-bg: #1d1e1f;
-  
-  /* Element Plus 暗黑模式变量覆盖 */
+  /* Element Plus 暗黑模式 */
   --el-bg-color: #1d1e1f;
   --el-bg-color-page: #141414;
-  --el-bg-color-overlay: #1d1e1f;
   --el-text-color-primary: #e5eaf3;
   --el-text-color-regular: #cfd3dc;
   --el-text-color-secondary: #a3a6ad;
   --el-border-color: #4c4d4f;
-  --el-border-color-light: #414243;
   --el-fill-color: #303030;
   --el-fill-color-light: #262727;
-  --el-fill-color-lighter: #1d1e1f;
-  --el-fill-color-blank: #141414;
 }
 
-/* 侧边栏深色主题 */
+/* ===== 侧边栏主题 ===== */
 .sidebar-dark {
   --sidebar-bg: #1d1e1f;
   --sidebar-text-color: #e5eaf3;
   --sidebar-hover-bg: #262727;
 }
 
-/* 侧边栏浅色主题 */
-.sidebar-light {
-  --sidebar-bg: #ffffff;
-  --sidebar-text-color: #303133;
-  --sidebar-hover-bg: #f5f7fa;
-}
-
-/* 头部深色主题 */
+/* ===== 头部主题 ===== */
 .header-dark {
   --header-bg: #1d1e1f;
   --header-text-color: #e5eaf3;
 }
 
-/* 头部浅色主题 */
-.header-light {
-  --header-bg: #ffffff;
-  --header-text-color: #303133;
-}
-
-/* 灰色模式 */
-.gray-mode {
-  filter: grayscale(100%);
-}
-
-/* 色弱模式 */
-.color-weak {
-  filter: invert(80%);
-}
-
-/* 全局样式 */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* ===== 全局样式 ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
   width: 100%;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px;
   color: var(--text-color-primary);
   background-color: var(--bg-color-page);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-#app {
-  width: 100%;
-  height: 100%;
-}
+#app { width: 100%; height: 100%; }
 
-/* 滚动条样式 */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+/* 滚动条 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.3); }
 
-::-webkit-scrollbar-track {
-  background-color: transparent;
-}
+/* 特殊模式 */
+.gray-mode { filter: grayscale(100%); }
+.color-weak { filter: invert(80%); }
 
-::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-}
+/* ===== Element Plus 覆盖 ===== */
+.el-card { border-radius: var(--border-radius); }
+.el-button { border-radius: var(--border-radius); }
+.el-input__wrapper { border-radius: var(--border-radius); }
+.el-dialog { border-radius: var(--border-radius-lg); }
+.el-dropdown-menu { border-radius: var(--border-radius); }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.3);
-}
+/* 暗黑模式组件适配 */
+.dark .el-card { background: var(--bg-color); border-color: var(--border-color); }
+.dark .el-input__wrapper { background: var(--bg-color); }
+.dark .el-table { --el-table-bg-color: var(--bg-color); }
+.dark .el-dialog { background: var(--bg-color); }
 
-/* Element Plus 样式覆盖 */
-.el-button--primary {
-  --el-button-bg-color: var(--el-color-primary);
-  --el-button-border-color: var(--el-color-primary);
-  --el-button-hover-bg-color: var(--el-color-primary-light-3);
-  --el-button-hover-border-color: var(--el-color-primary-light-3);
-  --el-button-active-bg-color: var(--el-color-primary-dark-2);
-  --el-button-active-border-color: var(--el-color-primary-dark-2);
-}
+/* ===== 链接 ===== */
+a { color: var(--el-color-primary); text-decoration: none; }
+a:hover { color: var(--el-color-primary-light-3); }
 
-/* 卡片暗黑模式 */
-.dark .el-card {
-  --el-card-bg-color: var(--card-bg);
-  background-color: var(--card-bg);
-  border-color: var(--border-color);
-}
-
-/* 输入框暗黑模式 */
-.dark .el-input__wrapper {
-  background-color: var(--el-fill-color-blank);
-  box-shadow: 0 0 0 1px var(--border-color) inset;
-}
-
-.dark .el-input__wrapper:hover {
-  box-shadow: 0 0 0 1px var(--border-color) inset;
-}
-
-.dark .el-input__wrapper.is-focus {
-  box-shadow: 0 0 0 1px var(--el-color-primary) inset;
-}
-
-/* 表格暗黑模式 */
-.dark .el-table {
-  --el-table-bg-color: var(--card-bg);
-  --el-table-tr-bg-color: var(--card-bg);
-  --el-table-header-bg-color: var(--el-fill-color-light);
-  --el-table-row-hover-bg-color: var(--el-fill-color-light);
-  --el-table-border-color: var(--border-color);
-}
-
-/* 下拉菜单暗黑模式 */
-.dark .el-dropdown-menu {
-  background-color: var(--card-bg);
-  border-color: var(--border-color);
-}
-
-.dark .el-dropdown-menu__item:hover {
-  background-color: var(--el-fill-color-light);
-}
-
-/* 弹窗暗黑模式 */
-.dark .el-dialog {
-  --el-dialog-bg-color: var(--card-bg);
-  background-color: var(--card-bg);
-}
-
-.dark .el-dialog__header {
-  border-bottom-color: var(--border-color);
-}
-
-/* 分页暗黑模式 */
-.dark .el-pagination button {
-  background-color: var(--card-bg);
-}
-
-.dark .el-pagination .el-pager li {
-  background-color: var(--card-bg);
-}
-
-/* 链接样式 */
-a {
-  color: var(--el-color-primary);
-  text-decoration: none;
-}
-
-a:hover {
-  color: var(--el-color-primary-light-3);
-}
-
-/* 选中文字样式 */
-::selection {
-  background-color: var(--el-color-primary-light-8);
-  color: var(--el-color-primary);
-}
-
-/* 全局圆角应用 */
-.el-card {
-  border-radius: var(--border-radius) !important;
-}
-
-.el-button {
-  border-radius: var(--border-radius) !important;
-}
-
-.el-input__wrapper {
-  border-radius: var(--border-radius) !important;
-}
-
-.el-select__wrapper {
-  border-radius: var(--border-radius) !important;
-}
-
-.el-dialog {
-  border-radius: var(--border-radius-lg) !important;
-}
-
-.el-drawer {
-  border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg) !important;
-}
-
-.el-message-box {
-  border-radius: var(--border-radius) !important;
-}
-
-.el-dropdown-menu {
-  border-radius: var(--border-radius) !important;
-}
-
-.el-tabs--card > .el-tabs__header .el-tabs__item {
-  border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
-}
-
-/* 标签栏圆角 */
-.tab-item {
-  border-radius: var(--border-radius) !important;
-}
+/* ===== 选中文字 ===== */
+::selection { background: var(--el-color-primary-light-8); color: var(--el-color-primary); }

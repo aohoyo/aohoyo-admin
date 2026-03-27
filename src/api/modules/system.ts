@@ -25,7 +25,7 @@ export function updateUser(id: number, data: Partial<SystemUser>) {
 }
 
 export function deleteUser(id: number) {
-  return request.delete(`/system/user/${id}`)
+  return request.del(`/system/user/${id}`)
 }
 
 // 角色相关
@@ -52,7 +52,7 @@ export function updateRole(id: number, data: Partial<Role>) {
 }
 
 export function deleteRole(id: number) {
-  return request.delete(`/system/role/${id}`)
+  return request.del(`/system/role/${id}`)
 }
 
 // 菜单相关
@@ -80,5 +80,5 @@ export function updateMenu(id: number, data: Partial<Menu>) {
 }
 
 export function deleteMenu(id: number) {
-  return request.delete(`/system/menu/${id}`)
+  return request.del(`/system/menu/${id}`)
 }
