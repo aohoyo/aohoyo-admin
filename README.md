@@ -45,6 +45,18 @@
 - ✅ Tabs 标签栏（右键菜单、缓存）
 - ✅ ThemeSetting 主题设置面板
 - ✅ GlobalLoading 全局加载
+- ✅ ResponsiveDialog 响应式弹窗
+- ✅ ResponsiveSearch 响应式搜索
+- ✅ ResponsiveTable 响应式表格
+- ✅ LockScreen 锁屏组件
+
+### 📱 移动端适配
+- ✅ 响应式布局（自动检测设备类型）
+- ✅ useResponsive 组合式函数
+- ✅ 移动端侧边栏抽屉模式
+- ✅ 移动端适配全局样式
+- ✅ 弹窗/表格/搜索区域移动端优化
+- ✅ 分页组件移动端简化布局
 
 ### 🔧 工具库
 - ✅ Axios 请求封装（拦截器、错误处理）
@@ -53,6 +65,7 @@
 - ✅ useTable Hook
 - ✅ useForm Hook
 - ✅ useLoading Hook
+- ✅ useResponsive Hook
 - ✅ 日期处理（dayjs）
 - ✅ 本地存储封装
 - ✅ 权限工具函数
@@ -62,8 +75,8 @@
 ## 快速开始
 
 ### 环境要求
-- Node.js >= 18.0.0
-- npm >= 9.0.0
+- Node.js >= 20.0.0
+- npm >= 10.0.0
 
 ### 安装依赖
 
@@ -108,7 +121,6 @@ npm run preview
 | 构建 | Vite | ^8.0 |
 | 语言 | TypeScript | ~5.9 |
 | UI 库 | Element Plus | ^2.13 |
-| 样式 | UnoCSS | ^66.6 |
 | 状态 | Pinia | ^3.0 |
 | 路由 | Vue Router | ^4.6 |
 | 请求 | Axios | ^1.13 |
@@ -147,8 +159,7 @@ aohoyo-admin/
 ├── .env.production        # 生产环境变量
 ├── package.json           # 依赖配置
 ├── tsconfig.json          # TS 配置
-├── vite.config.ts         # Vite 配置
-└── uno.config.ts          # UnoCSS 配置
+└── vite.config.ts         # Vite 配置
 ```
 
 ---
@@ -197,6 +208,13 @@ aohoyo-admin/
 ---
 
 ## 更新日志
+
+### v1.3.0 (2026-04-11)
+- 📱 移动端适配 - 响应式布局/通用组件/全局样式优化
+- ✅ 新增 ResponsiveDialog / ResponsiveSearch / ResponsiveTable 组件
+- ✅ 新增 useResponsive 组合式函数
+- ✅ 布局组件移动端适配
+- ✅ 全局响应式样式优化
 
 ### v1.0.0 (2026-03-27)
 - 🎉 初始版本发布
