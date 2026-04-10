@@ -2,6 +2,12 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
+import { useResponsive } from '@/composables/useResponsive'
+import ResponsiveTable from '@/components/ResponsiveTable/index.vue'
+import ResponsiveDialog from '@/components/ResponsiveDialog/index.vue'
+import ResponsiveSearch from '@/components/ResponsiveSearch/index.vue'
+
+const { paginationLayout, paginationSmall } = useResponsive()
 
 // 表格数据
 const tableData = ref([
@@ -173,7 +179,7 @@ onMounted(() => {
     <el-card>
       <!-- 搜索栏 -->
       <template #header>
-        <div class="card-header">
+        <ResponsiveSearch>
           <el-input
             v-model="queryParams.keyword"
             placeholder="搜索用户名/昵称"
@@ -182,82 +188,92 @@ onMounted(() => {
             @keyup.enter="handleSearch"
           />
           <el-button type="primary" @click="handleSearch">搜索</el-button>
-        </div>
+          <template #actions>
+            <el-button v-permission="'user:create'" type="primary" @click="handleAdd">
+              <el-icon><Plus /></el-icon>
+              新增用户
+            </el-button>
+          </template>
+        </ResponsiveSearch>
       </template>
 
-      <!-- 操作按钮 -->
-      <div class="mb-4">
-        <el-button v-permission="'user:create'" type="primary" @click="handleAdd">
-          <el-icon><Plus /></el-icon>
-          新增用户
-        </el-button>
-      </div>
-
       <!-- 表格 -->
-      <el-table v-loading="loading" :data="tableData" stripe border>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="username" label="用户名" width="120" />
-        <el-table-column prop="nickname" label="昵称" width="120" />
-        <el-table-column prop="email" label="邮箱" />
-        <el-table-column prop="phone" label="手机号" width="130" />
-        <el-table-column label="角色" width="150">
-          <template #default="{ row }">
-            <el-tag
-              v-for="role in row.roles"
-              :key="role"
-              size="small"
-              class="mr-1"
-              type="primary"
-              effect="dark"
-            >
-              {{ role }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" width="100">
-          <template #default="{ row }">
-            <el-switch
-              v-model="row.status"
-              :active-value="1"
-              :inactive-value="0"
-              @change="handleStatusChange(row)"
-            />
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="170" />
-        <el-table-column label="操作" width="180" fixed="right">
-          <template #default="{ row }">
-            <el-button v-permission="'user:edit'" size="small" link @click="handleEdit(row)">
-              编辑
-            </el-button>
-            <el-button
-              v-permission="'user:delete'"
-              type="danger"
-              size="small"
-              link
-              @click="handleDelete(row)"
-            >
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <ResponsiveTable min-width="900px">
+        <el-table v-loading="loading" :data="tableData" stripe border>
+          <el-table-column prop="id" label="ID" width="80" />
+          <el-table-column prop="username" label="用户名" width="120" />
+          <el-table-column prop="nickname" label="昵称" width="120" />
+          <el-table-column prop="email" label="邮箱" />
+          <el-table-column prop="phone" label="手机号" width="130" />
+          <el-table-column label="角色" width="150">
+            <template #default="{ row }">
+              <el-tag
+                v-for="role in row.roles"
+                :key="role"
+                size="small"
+                class="mr-1"
+                type="primary"
+                effect="dark"
+              >
+                {{ role }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态" width="100">
+            <template #default="{ row }">
+              <el-switch
+                v-model="row.status"
+                :active-value="1"
+                :inactive-value="0"
+                @change="handleStatusChange(row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column prop="createTime" label="创建时间" width="170" />
+          <el-table-column label="操作" width="180" fixed="right">
+            <template #default="{ row }">
+              <el-button v-permission="'user:edit'" size="small" link @click="handleEdit(row)">
+                编辑
+              </el-button>
+              <el-button
+                v-permission="'user:delete'"
+                type="danger"
+                size="small"
+                link
+                @click="handleDelete(row)"
+              >
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </ResponsiveTable>
 
       <!-- 分页 -->
-      <div class="mt-4 flex justify-end">
+      <div class="pagination-wrapper">
         <el-pagination
           v-model:current-page="queryParams.page"
           v-model:page-size="queryParams.pageSize"
           :total="total"
           :page-sizes="[10, 20, 50, 100]"
-          layout="total, sizes, prev, pager, next, jumper"
+          :layout="paginationLayout"
+          :small="paginationSmall"
         />
       </div>
     </el-card>
 
     <!-- 新增/编辑弹窗 -->
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="500px">
-      <el-form ref="formRef" :model="formData" :rules="rules" label-width="80px">
+    <ResponsiveDialog
+      v-model="dialogVisible"
+      :title="dialogTitle"
+      desktop-width="500px"
+    >
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="rules"
+        label-width="80px"
+      >
         <el-form-item label="用户名" prop="username">
           <el-input v-model="formData.username" placeholder="请输入用户名" />
         </el-form-item>
@@ -291,38 +307,12 @@ onMounted(() => {
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
-    </el-dialog>
+    </ResponsiveDialog>
   </div>
 </template>
 
 <style scoped>
-.page-container {
-  padding: 20px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .mr-1 {
   margin-right: 4px;
-}
-
-.mb-4 {
-  margin-bottom: 16px;
-}
-
-.mt-4 {
-  margin-top: 16px;
-}
-
-.flex {
-  display: flex;
-}
-
-.justify-end {
-  justify-content: flex-end;
 }
 </style>

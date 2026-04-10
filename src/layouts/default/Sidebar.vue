@@ -45,6 +45,9 @@ const activeMenu = computed(() => route.path)
 // 是否折叠
 const isCollapsed = computed(() => appStore.sidebarCollapsed)
 
+// 是否移动端
+const isMobile = computed(() => appStore.device === 'mobile')
+
 // Logo 配置
 const showLogo = computed(() => defaultSettings.layout.showLogo)
 const title = computed(() => defaultSettings.title)
@@ -53,9 +56,13 @@ const logo = computed(() => defaultSettings.logo)
 // 点击菜单
 const handleSelect = (path: string) => {
   router.push(path)
+  // 移动端点击菜单后关闭抽屉
+  if (isMobile.value) {
+    appStore.closeMobileSidebar()
+  }
 }
 
-// 切换折叠
+// 切换折叠（仅桌面端）
 const toggleCollapse = () => {
   appStore.toggleSidebar()
 }
@@ -66,14 +73,14 @@ const toggleCollapse = () => {
     <!-- Logo 区域 -->
     <div v-if="showLogo" class="sidebar-logo" @click="router.push('/dashboard')">
       <img :src="logo" alt="Logo" class="logo-img" />
-      <span v-show="!isCollapsed" class="logo-text">{{ title }}</span>
+      <span v-show="!isCollapsed || isMobile" class="logo-text">{{ title }}</span>
     </div>
 
     <!-- 菜单区域 -->
     <el-scrollbar class="sidebar-menu-wrapper">
       <el-menu
         :default-active="activeMenu"
-        :collapse="isCollapsed"
+        :collapse="!isMobile && isCollapsed"
         :collapse-transition="false"
         :unique-opened="true"
         :router="false"
@@ -134,8 +141,8 @@ const toggleCollapse = () => {
       </el-menu>
     </el-scrollbar>
 
-    <!-- 折叠按钮 -->
-    <div class="sidebar-collapse-btn" @click="toggleCollapse">
+    <!-- 折叠按钮（仅桌面端显示） -->
+    <div v-if="!isMobile" class="sidebar-collapse-btn" @click="toggleCollapse">
       <el-icon :size="18">
         <component :is="isCollapsed ? 'Expand' : 'Fold'" />
       </el-icon>
@@ -156,7 +163,7 @@ const toggleCollapse = () => {
   align-items: center;
   height: 50px;
   padding: 0 16px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--el-border-color);
   cursor: pointer;
   transition: background 0.3s;
 }
@@ -216,7 +223,7 @@ const toggleCollapse = () => {
   align-items: center;
   justify-content: center;
   height: 40px;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--el-border-color);
   color: var(--sidebar-text-color);
   cursor: pointer;
   transition: all 0.3s;

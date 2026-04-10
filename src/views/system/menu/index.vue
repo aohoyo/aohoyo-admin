@@ -3,6 +3,8 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import ResponsiveTable from '@/components/ResponsiveTable/index.vue'
+import ResponsiveDialog from '@/components/ResponsiveDialog/index.vue'
 
 // 所有 Element Plus 图标
 const iconList = Object.keys(ElementPlusIconsVue)
@@ -236,64 +238,75 @@ onMounted(() => {
         </div>
       </template>
 
-      <!-- 表格 - 树形结构 -->
-      <el-table
-        v-loading="loading"
-        :data="tableData"
-        row-key="id"
-        border
-        default-expand-all
-        style="width: 100%"
-      >
-        <el-table-column prop="name" label="菜单名称" min-width="180" />
-        <el-table-column label="图标" width="80" align="center">
-          <template #default="{ row }">
-            <el-icon v-if="row.icon" :size="18">
-              <component :is="row.icon" />
-            </el-icon>
-          </template>
-        </el-table-column>
-        <el-table-column prop="path" label="路由路径" min-width="180" />
-        <el-table-column label="类型" width="90" align="center">
-          <template #default="{ row }">
-            <el-tag
-              :type="row.type === 'dir' ? 'primary' : row.type === 'menu' ? 'success' : 'warning'"
-              size="small"
-              effect="dark"
-            >
-              {{ row.type === 'dir' ? '目录' : row.type === 'menu' ? '菜单' : '按钮' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sort" label="排序" width="70" align="center" />
-        <el-table-column label="状态" width="80" align="center">
-          <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small" effect="dark">
-              {{ row.status === 1 ? '启用' : '禁用' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
-          <template #default="{ row }">
-            <el-button
-              v-if="row.type !== 'button'"
-              type="primary"
-              size="small"
-              link
-              @click="handleAdd(row.id)"
-            >
-              新增
-            </el-button>
-            <el-button size="small" link @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" size="small" link @click="handleDelete(row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <!-- 表格 -->
+      <ResponsiveTable min-width="860px">
+        <el-table
+          v-loading="loading"
+          :data="tableData"
+          row-key="id"
+          border
+          default-expand-all
+          style="width: 100%"
+        >
+          <el-table-column prop="name" label="菜单名称" min-width="180" />
+          <el-table-column label="图标" width="80" align="center">
+            <template #default="{ row }">
+              <el-icon v-if="row.icon" :size="18">
+                <component :is="row.icon" />
+              </el-icon>
+            </template>
+          </el-table-column>
+          <el-table-column prop="path" label="路由路径" min-width="180" />
+          <el-table-column label="类型" width="90" align="center">
+            <template #default="{ row }">
+              <el-tag
+                :type="row.type === 'dir' ? 'primary' : row.type === 'menu' ? 'success' : 'warning'"
+                size="small"
+                effect="dark"
+              >
+                {{ row.type === 'dir' ? '目录' : row.type === 'menu' ? '菜单' : '按钮' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="sort" label="排序" width="70" align="center" />
+          <el-table-column label="状态" width="80" align="center">
+            <template #default="{ row }">
+              <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small" effect="dark">
+                {{ row.status === 1 ? '启用' : '禁用' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="180" fixed="right">
+            <template #default="{ row }">
+              <el-button
+                v-if="row.type !== 'button'"
+                type="primary"
+                size="small"
+                link
+                @click="handleAdd(row.id)"
+              >
+                新增
+              </el-button>
+              <el-button size="small" link @click="handleEdit(row)">编辑</el-button>
+              <el-button type="danger" size="small" link @click="handleDelete(row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </ResponsiveTable>
     </el-card>
 
     <!-- 新增/编辑弹窗 -->
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="550px">
-      <el-form ref="formRef" :model="formData" :rules="rules" label-width="100px">
+    <ResponsiveDialog
+      v-model="dialogVisible"
+      :title="dialogTitle"
+      desktop-width="550px"
+    >
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="rules"
+        label-width="100px"
+      >
         <el-form-item label="上级菜单">
           <el-tree-select
             v-model="formData.parentId"
@@ -354,21 +367,11 @@ onMounted(() => {
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
-    </el-dialog>
+    </ResponsiveDialog>
   </div>
 </template>
 
 <style scoped>
-.page-container {
-  padding: 20px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 /* 图标选择器 */
 .icon-picker-trigger {
   display: flex;
@@ -377,7 +380,7 @@ onMounted(() => {
   width: 100%;
   height: 32px;
   padding: 0 12px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--el-border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
   transition: border-color 0.2s;
@@ -388,12 +391,12 @@ onMounted(() => {
 }
 
 .placeholder {
-  color: var(--text-color-placeholder);
+  color: var(--el-text-color-placeholder);
   font-size: 14px;
 }
 
 .arrow {
-  color: var(--text-color-placeholder);
+  color: var(--el-text-color-placeholder);
 }
 
 .icon-picker-panel {
@@ -403,8 +406,8 @@ onMounted(() => {
   right: 0;
   margin-top: 4px;
   padding: 12px;
-  background: var(--bg-color);
-  border: 1px solid var(--border-color);
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color);
   border-radius: var(--border-radius);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   z-index: 100;
@@ -418,13 +421,19 @@ onMounted(() => {
   gap: 8px;
 }
 
+@media (max-width: 768px) {
+  .icon-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
 .icon-item {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 36px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--el-border-color);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;

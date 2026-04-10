@@ -19,12 +19,27 @@ export const useAppStore = defineStore('app', {
   actions: {
     // 切换侧边栏
     toggleSidebar() {
-      this.sidebarCollapsed = !this.sidebarCollapsed
+      if (this.device === 'mobile') {
+        // 移动端：控制抽屉显隐
+        this.sidebarCollapsed = !this.sidebarCollapsed
+      } else {
+        this.sidebarCollapsed = !this.sidebarCollapsed
+      }
+    },
+
+    // 关闭移动端侧边栏（抽屉）
+    closeMobileSidebar() {
+      if (this.device === 'mobile') {
+        this.sidebarCollapsed = false
+      }
     },
 
     // 设置设备类型
     setDevice(device: 'desktop' | 'mobile') {
       this.device = device
+      if (device === 'mobile') {
+        this.sidebarCollapsed = false
+      }
     }
   },
 

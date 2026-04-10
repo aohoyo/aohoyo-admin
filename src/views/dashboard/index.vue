@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
+import { useResponsive } from '@/composables/useResponsive'
 
 const { t } = useI18n()
 const userStore = useUserStore()
+const { isMobile } = useResponsive()
 </script>
 
 <template>
@@ -14,8 +16,8 @@ const userStore = useUserStore()
       }}！
     </h1>
 
-    <el-row :gutter="20" class="stat-row">
-      <el-col :span="6">
+    <el-row :gutter="isMobile ? 12 : 20" class="stat-row">
+      <el-col :xs="12" :sm="12" :md="6">
         <el-card shadow="hover" class="stat-card">
           <div class="stat-content">
             <div class="stat-value" style="color: var(--el-color-primary)">1,234</div>
@@ -23,7 +25,7 @@ const userStore = useUserStore()
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="12" :sm="12" :md="6">
         <el-card shadow="hover" class="stat-card">
           <div class="stat-content">
             <div class="stat-value" style="color: var(--el-color-success)">56</div>
@@ -31,7 +33,7 @@ const userStore = useUserStore()
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="12" :sm="12" :md="6">
         <el-card shadow="hover" class="stat-card">
           <div class="stat-content">
             <div class="stat-value" style="color: var(--el-color-primary)">89%</div>
@@ -39,7 +41,7 @@ const userStore = useUserStore()
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :xs="12" :sm="12" :md="6">
         <el-card shadow="hover" class="stat-card">
           <div class="stat-content">
             <div class="stat-value" style="color: #9b59b6">99.9%</div>
@@ -64,7 +66,7 @@ const userStore = useUserStore()
       <template #header>
         <span>{{ t('dashboard.systemInfo') }}</span>
       </template>
-      <el-descriptions :column="2" border>
+      <el-descriptions :column="isMobile ? 1 : 2" border>
         <el-descriptions-item :label="t('dashboard.frameworkVersion')">
           Vue 3.x
         </el-descriptions-item>
@@ -100,6 +102,7 @@ const userStore = useUserStore()
 .stat-card {
   cursor: pointer;
   transition: transform 0.2s;
+  margin-bottom: 12px;
 }
 
 .stat-card:hover {
@@ -119,9 +122,42 @@ const userStore = useUserStore()
 
 .stat-label {
   color: var(--el-text-color-secondary);
+  font-size: 14px;
 }
 
 .quick-start-card {
   margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 16px 8px;
+  }
+
+  .welcome-title {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .stat-row {
+    margin-bottom: 16px;
+  }
+
+  .stat-content {
+    padding: 8px 0;
+  }
+
+  .stat-value {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .quick-start-card {
+    margin-bottom: 16px;
+  }
 }
 </style>

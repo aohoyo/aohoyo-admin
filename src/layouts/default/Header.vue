@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import { useThemeStore } from '@/stores/theme'
+import { useAppStore } from '@/stores/app'
 import { setLocale, getLocaleValue } from '@/locales'
 import ThemeSetting from '@/components/ThemeSetting/index.vue'
 import Notification from '@/components/Notification/index.vue'
@@ -12,9 +13,12 @@ const { t } = useI18n()
 const router = useRouter()
 const userStore = useUserStore()
 const themeStore = useThemeStore()
+const appStore = useAppStore()
 
 const themeSettingRef = ref()
 const currentLocale = ref(getLocaleValue())
+
+const isMobile = computed(() => appStore.device === 'mobile')
 
 const languages = [
   { label: '简体中文', value: 'zh-CN' },
@@ -64,19 +68,27 @@ const lockScreen = () => {
 </script>
 
 <template>
-  <div class="header">
-    <!-- 面包屑 -->
-    <el-breadcrumb separator="/">
+  <div :class="['header', { 'is-mobile': isMobile }]">
+    <!-- 移动端汉堡按钮 -->
+    <el-icon v-if="isMobile" class="hamburger-btn" @click="appStore.toggleSidebar">
+      <Expand />
+    </el-icon>
+
+    <!-- 面包屑（桌面端显示） -->
+    <el-breadcrumb v-if="!isMobile" separator="/">
       <el-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
         <router-link v-if="item.path" :to="item.path">{{ t(item.titleKey) }}</router-link>
         <span v-else>{{ t(item.titleKey) }}</span>
       </el-breadcrumb-item>
     </el-breadcrumb>
 
+    <!-- 移动端标题 -->
+    <span v-if="isMobile" class="mobile-title">{{ t(breadcrumbs[breadcrumbs.length - 1]?.titleKey || 'dashboard.welcome') }}</span>
+
     <!-- 工具栏 -->
-    <div class="toolbar">
+    <div :class="['toolbar', { 'is-mobile': isMobile }]">
       <!-- 锁屏 -->
-      <el-tooltip v-if="themeStore.lockScreenEnabled" :content="t('header.lockScreen')">
+      <el-tooltip v-if="themeStore.lockScreenEnabled && !isMobile" :content="t('header.lockScreen')">
         <el-icon class="icon" @click="lockScreen"><Lock /></el-icon>
       </el-tooltip>
 
@@ -85,18 +97,18 @@ const lockScreen = () => {
         <Notification ref="notificationRef" />
       </div>
 
-      <!-- 全屏 -->
-      <el-tooltip v-if="themeStore.fullscreenEnabled" :content="t('header.fullscreen')">
+      <!-- 全屏（仅桌面端） -->
+      <el-tooltip v-if="themeStore.fullscreenEnabled && !isMobile" :content="t('header.fullscreen')">
         <el-icon class="icon" @click="toggleFullscreen"><FullScreen /></el-icon>
       </el-tooltip>
 
       <!-- 主题设置 -->
-      <el-tooltip :content="t('header.themeSetting')">
+      <el-tooltip v-if="!isMobile" :content="t('header.themeSetting')">
         <el-icon class="icon" @click="themeSettingRef?.open()"><Brush /></el-icon>
       </el-tooltip>
 
-      <!-- 语言切换 -->
-      <el-dropdown v-if="themeStore.languageEnabled" trigger="click" @command="handleLocaleChange">
+      <!-- 语言切换（仅桌面端） -->
+      <el-dropdown v-if="themeStore.languageEnabled && !isMobile" trigger="click" @command="handleLocaleChange">
         <span class="icon lang-text">{{ currentLocale === 'zh-CN' ? '中' : 'EN' }}</span>
         <template #dropdown>
           <el-dropdown-menu>
@@ -108,7 +120,7 @@ const lockScreen = () => {
       </el-dropdown>
 
       <!-- 刷新 -->
-      <el-tooltip v-if="themeStore.refreshEnabled" :content="t('common.refresh')">
+      <el-tooltip v-if="themeStore.refreshEnabled && !isMobile" :content="t('common.refresh')">
         <el-icon class="icon" @click="router.go(0)"><Refresh /></el-icon>
       </el-tooltip>
 
@@ -116,7 +128,7 @@ const lockScreen = () => {
       <el-dropdown trigger="click" @command="handleCommand">
         <div class="user">
           <el-avatar :size="28">{{ username.charAt(0).toUpperCase() }}</el-avatar>
-          <span>{{ username }}</span>
+          <span v-if="!isMobile">{{ username }}</span>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
@@ -150,10 +162,42 @@ const lockScreen = () => {
   padding: 0 16px;
 }
 
+.header.is-mobile {
+  padding: 0 12px;
+}
+
+.hamburger-btn {
+  font-size: 22px;
+  color: var(--el-text-color-primary);
+  cursor: pointer;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.hamburger-btn:hover {
+  color: var(--el-color-primary);
+}
+
+.mobile-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .toolbar {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-shrink: 0;
+}
+
+.toolbar.is-mobile {
+  gap: 8px;
 }
 
 .icon {

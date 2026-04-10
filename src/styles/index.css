@@ -37,7 +37,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .el-card, .el-button, .el-input__wrapper { border-radius: var(--border-radius); }
 .el-dialog { border-radius: calc(var(--border-radius) * 2); }
 
-/* 下拉菜单 hover 样式 - 背景橙色，文字白色 */
+/* 下拉菜单 hover 样式 */
 .el-dropdown-menu__item:not(.is-disabled):hover {
   color: var(--el-bg-color) !important;
   background-color: var(--el-color-primary) !important;
@@ -46,3 +46,228 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 /* 编辑按钮蓝色 */
 .el-button.is-link:not(.el-button--primary):not(.el-button--success):not(.el-button--warning):not(.el-button--danger):not(.el-button--info) { color: var(--el-color-primary); }
 .el-button.is-link:not(.el-button--primary):not(.el-button--success):not(.el-button--warning):not(.el-button--danger):not(.el-button--info):hover { color: var(--el-color-primary-light-3); }
+
+/* ==============================
+   通用布局工具类
+   ============================== */
+
+/* 卡片头部通用布局 */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 分页容器通用布局 */
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* 页面容器通用间距（桌面端） */
+.page-container {
+  padding: 20px;
+}
+
+/* ==============================
+   移动端全局响应式样式
+   ============================== */
+
+@media (max-width: 768px) {
+  /* 防止横向溢出 */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* 禁止文字选中（避免触摸误选） */
+  .layout-header,
+  .sidebar-container,
+  .tabs-container {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* 触摸热区最小 44px（Apple HIG） */
+  .el-button {
+    min-height: 44px;
+  }
+
+  .el-menu-item,
+  .el-sub-menu__title {
+    min-height: 44px !important;
+    line-height: 44px !important;
+  }
+
+  /* 页面容器统一间距 */
+  .page-container {
+    padding: 12px 8px !important;
+  }
+
+  /* 卡片头部自动堆叠 */
+  .card-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px;
+  }
+
+  /* 搜索区撑满 */
+  .search-area {
+    width: 100% !important;
+  }
+
+  .search-area .el-input {
+    width: 100% !important;
+  }
+
+  /* 表格容器横滚 */
+  .table-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* 分页居中 */
+  .pagination-wrapper {
+    justify-content: center !important;
+  }
+
+  /* 所有 el-col 单列堆叠（覆盖非响应式 span） */
+  .el-col-1, .el-col-2, .el-col-3, .el-col-4,
+  .el-col-5, .el-col-6, .el-col-7, .el-col-8,
+  .el-col-9, .el-col-10, .el-col-11, .el-col-12,
+  .el-col-13, .el-col-14, .el-col-15, .el-col-16,
+  .el-col-17, .el-col-18, .el-col-19, .el-col-20,
+  .el-col-21, .el-col-22, .el-col-23, .el-col-24 {
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  /* el-form 适配 */
+  .el-form {
+    max-width: 100% !important;
+  }
+
+  /* 对话框：非全屏模式适配 */
+  .el-dialog:not(.is-fullscreen) {
+    --el-dialog-width: 92% !important;
+    margin-top: 8vh !important;
+    border-radius: 12px !important;
+  }
+
+  .el-dialog:not(.is-fullscreen) .el-dialog__header {
+    padding: 16px 16px 8px;
+  }
+
+  .el-dialog:not(.is-fullscreen) .el-dialog__body {
+    padding: 16px;
+    max-height: 65vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .el-dialog:not(.is-fullscreen) .el-dialog__footer {
+    padding: 8px 16px 16px;
+  }
+
+  /* 全屏对话框内容区滚动 */
+  .el-dialog.is-fullscreen .el-dialog__body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 表单标签更紧凑 */
+  .el-form--label-top .el-form-item__label {
+    padding-bottom: 4px;
+  }
+
+  /* 卡片内边距调整 */
+  .el-card__body {
+    padding: 12px;
+  }
+
+  .el-card__header {
+    padding: 12px;
+  }
+
+  /* 消息提示适配 */
+  .el-message-box {
+    width: 90% !important;
+    max-width: 420px;
+  }
+
+  /* 分页组件更紧凑 */
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .el-pagination .el-pagination__sizes {
+    margin: 0;
+  }
+
+  .el-pagination .el-pagination__jump {
+    display: none;
+  }
+
+  /* 描述列表 */
+  .el-descriptions {
+    --el-descriptions-table-border: none;
+  }
+
+  /* 表格优化 */
+  .el-table {
+    font-size: 13px;
+  }
+
+  .el-table th.el-table__cell {
+    padding: 8px 0;
+  }
+
+  .el-table td.el-table__cell {
+    padding: 8px 0;
+  }
+
+  /* 下拉选择器防止超出屏幕 */
+  .el-select-dropdown {
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  /* 标签页滚动优化 */
+  .tabs-wrapper {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Drawer 优化 */
+  .el-drawer__body {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+  /* 增加可点击区域的间距 */
+  .el-button + .el-button {
+    margin-left: 8px;
+  }
+
+  /* 输入框聚焦优化 */
+  .el-input__wrapper {
+    transition: box-shadow 0.2s;
+  }
+}
+
+/* iOS Safari 100vh 修复 */
+@supports (-webkit-touch-callout: none) {
+  .layout-container {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+}
+
+/* viewport meta 安全区域支持 */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .layout-content.is-mobile {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+}

@@ -207,4 +207,3 @@ const request = {
 }
 
 export default request
-export { service as axiosInstance, logger }

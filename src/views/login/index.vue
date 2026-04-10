@@ -118,10 +118,12 @@ const handleKeyup = (e: KeyboardEvent) => {
   justify-content: center;
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #e4e7ed 100%);
+  padding: 16px;
 }
 
 .login-box {
   width: 400px;
+  max-width: 100%;
   padding: 40px;
   background: #fff;
   border-radius: 8px;
@@ -164,5 +166,37 @@ const handleKeyup = (e: KeyboardEvent) => {
   text-align: center;
   color: var(--el-text-color-secondary);
   font-size: 12px;
+}
+
+/* 移动端适配 */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 24px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .login-header {
+    margin-bottom: 24px;
+  }
+
+  .login-logo {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+  }
+
+  .login-title {
+    font-size: 20px;
+  }
+
+  .login-subtitle {
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .login-form {
+    margin-top: 16px;
+  }
 }
 </style>

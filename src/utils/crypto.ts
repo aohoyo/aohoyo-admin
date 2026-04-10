@@ -16,9 +16,3 @@ export function decode(encoded: string): string {
     return ''
   }
 }
-
-/** 校验密码 */
-export function verifyPassword(input: string, stored: string): boolean {
-  if (!stored) return true
-  return decode(stored) === input
-}

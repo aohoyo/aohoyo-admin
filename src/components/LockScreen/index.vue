@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useThemeStore } from '@/stores/theme'
 import { useUserStore } from '@/stores/user'
@@ -282,5 +282,27 @@ const handleClearPassword = () => {
 .lock-card :deep(.el-button--primary:hover) {
   background: rgba(255, 255, 255, 0.3);
   border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .lock-card {
+    width: calc(100% - 32px);
+    max-width: 380px;
+    padding: 24px 16px;
+  }
+
+  .time {
+    font-size: 36px;
+  }
+
+  .date {
+    font-size: 13px;
+  }
+
+  .avatar {
+    width: 52px !important;
+    height: 52px !important;
+  }
 }
 </style>

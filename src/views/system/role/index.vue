@@ -2,6 +2,12 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
+import { useResponsive } from '@/composables/useResponsive'
+import ResponsiveTable from '@/components/ResponsiveTable/index.vue'
+import ResponsiveDialog from '@/components/ResponsiveDialog/index.vue'
+import ResponsiveSearch from '@/components/ResponsiveSearch/index.vue'
+
+const { paginationLayout, paginationSmall } = useResponsive()
 
 // 表格数据
 const tableData = ref([
@@ -30,7 +36,7 @@ const tableData = ref([
     description: '内容编辑权限',
     status: 1,
     permissions: ['dashboard:view', 'content:view', 'content:edit'],
-    createTime: '2026-02-01 00:00:00'
+    createTime: '2026-02-01 10:00:00'
   }
 ])
 
@@ -218,7 +224,7 @@ onMounted(() => {
     <el-card>
       <!-- 搜索栏 -->
       <template #header>
-        <div class="card-header">
+        <ResponsiveSearch>
           <el-input
             v-model="queryParams.keyword"
             placeholder="搜索角色名称"
@@ -227,61 +233,71 @@ onMounted(() => {
             @keyup.enter="handleSearch"
           />
           <el-button type="primary" @click="handleSearch">搜索</el-button>
-        </div>
+          <template #actions>
+            <el-button type="primary" @click="handleAdd">
+              <el-icon><Plus /></el-icon>
+              新增角色
+            </el-button>
+          </template>
+        </ResponsiveSearch>
       </template>
 
-      <!-- 操作按钮 -->
-      <div class="mb-4">
-        <el-button type="primary" @click="handleAdd">
-          <el-icon><Plus /></el-icon>
-          新增角色
-        </el-button>
-      </div>
-
       <!-- 表格 -->
-      <el-table v-loading="loading" :data="tableData" stripe border>
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="name" label="角色名称" width="150" />
-        <el-table-column prop="code" label="角色编码" width="120" />
-        <el-table-column prop="description" label="描述" />
-        <el-table-column label="状态" width="100">
-          <template #default="{ row }">
-            <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small" effect="dark">
-              {{ row.status === 1 ? '启用' : '禁用' }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="创建时间" width="170" />
-        <el-table-column label="操作" width="150" fixed="right">
-          <template #default="{ row }">
-            <el-button size="small" link @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" size="small" link @click="handleDelete(row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <ResponsiveTable min-width="770px">
+        <el-table v-loading="loading" :data="tableData" stripe border>
+          <el-table-column prop="id" label="ID" width="80" />
+          <el-table-column prop="name" label="角色名称" width="150" />
+          <el-table-column prop="code" label="角色编码" width="120" />
+          <el-table-column prop="description" label="描述" />
+          <el-table-column label="状态" width="100">
+            <template #default="{ row }">
+              <el-tag :type="row.status === 1 ? 'success' : 'danger'" size="small" effect="dark">
+                {{ row.status === 1 ? '启用' : '禁用' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="createTime" label="创建时间" width="170" />
+          <el-table-column label="操作" width="150" fixed="right">
+            <template #default="{ row }">
+              <el-button size="small" link @click="handleEdit(row)">编辑</el-button>
+              <el-button type="danger" size="small" link @click="handleDelete(row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </ResponsiveTable>
 
       <!-- 分页 -->
-      <div class="mt-4 flex justify-end">
+      <div class="pagination-wrapper">
         <el-pagination
           v-model:current-page="queryParams.page"
           v-model:page-size="queryParams.pageSize"
           :total="total"
           :page-sizes="[10, 20, 50, 100]"
-          layout="total, sizes, prev, pager, next, jumper"
+          :layout="paginationLayout"
+          :small="paginationSmall"
         />
       </div>
     </el-card>
 
     <!-- 新增/编辑弹窗 -->
-    <el-dialog v-model="dialogVisible" :title="dialogTitle" width="700px">
-      <el-form ref="formRef" :model="formData" :rules="rules" label-width="100px">
+    <ResponsiveDialog
+      v-model="dialogVisible"
+      :title="dialogTitle"
+      desktop-width="700px"
+    >
+      <el-form
+        ref="formRef"
+        :model="formData"
+        :rules="rules"
+        label-width="100px"
+      >
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :sm="12">
             <el-form-item label="角色名称" prop="name">
               <el-input v-model="formData.name" placeholder="请输入角色名称" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :sm="12">
             <el-form-item label="角色编码" prop="code">
               <el-input
                 v-model="formData.code"
@@ -324,45 +340,19 @@ onMounted(() => {
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
-    </el-dialog>
+    </ResponsiveDialog>
   </div>
 </template>
 
 <style scoped>
-.page-container {
-  padding: 20px;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.mb-4 {
-  margin-bottom: 16px;
-}
-
-.mt-4 {
-  margin-top: 16px;
-}
-
-.flex {
-  display: flex;
-}
-
-.justify-end {
-  justify-content: flex-end;
-}
-
 .permission-tree-wrapper {
   width: 100%;
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--el-border-color);
   border-radius: var(--border-radius);
   padding: 12px;
-  background-color: var(--bg-color-page);
+  background-color: var(--el-bg-color-page);
 }
 
 .permission-tree-wrapper :deep(.el-tree-node__content) {

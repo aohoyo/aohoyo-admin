@@ -39,14 +39,28 @@ const goBack = () => {
 .error-code {
   font-size: 120px;
   font-weight: bold;
-  color: var(--primary-color);
+  color: var(--el-color-primary);
   line-height: 1;
   margin-bottom: 20px;
 }
 
 .error-message {
   font-size: 18px;
-  color: var(--text-color-secondary);
+  color: var(--el-text-color-secondary);
   margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .error-content {
+    padding: 20px;
+  }
+
+  .error-code {
+    font-size: 80px;
+  }
+
+  .error-message {
+    font-size: 15px;
+  }
 }
 </style>

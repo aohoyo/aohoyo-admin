@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useThemeStore } from '@/stores/theme'
 import Sidebar from './Sidebar.vue'
@@ -10,6 +10,8 @@ import defaultSettings from '@/config/settings'
 const appStore = useAppStore()
 const themeStore = useThemeStore()
 
+const isMobile = computed(() => appStore.device === 'mobile')
+
 const sidebarWidth = computed(() =>
   appStore.sidebarCollapsed
     ? defaultSettings.layout.sidebarCollapsedWidth
@@ -18,27 +20,77 @@ const sidebarWidth = computed(() =>
 
 const fixedSidebar = computed(() => defaultSettings.layout.fixedSidebar)
 const showFooter = computed(() => defaultSettings.layout.showFooter)
+
+// 移动端侧边栏抽屉显隐
+const mobileDrawerVisible = computed({
+  get: () => isMobile.value && appStore.sidebarCollapsed,
+  set: (val: boolean) => {
+    if (!val) {
+      appStore.closeMobileSidebar()
+    }
+  }
+})
+
+// 响应式监听
+const MOBILE_BREAKPOINT = 768
+
+const handleResize = () => {
+  const width = window.innerWidth
+  if (width < MOBILE_BREAKPOINT) {
+    appStore.setDevice('mobile')
+  } else {
+    appStore.setDevice('desktop')
+  }
+}
+
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 </script>
 
 <template>
   <el-container class="layout-container">
-    <el-aside
-      :width="`${sidebarWidth}px`"
-      :class="['layout-sidebar', { 'is-fixed': fixedSidebar }]"
+    <!-- 桌面端侧边栏 -->
+    <template v-if="!isMobile">
+      <el-aside
+        :width="`${sidebarWidth}px`"
+        :class="['layout-sidebar', { 'is-fixed': fixedSidebar }]"
+      >
+        <Sidebar />
+      </el-aside>
+    </template>
+
+    <!-- 移动端抽屉侧边栏 -->
+    <el-drawer
+      v-if="isMobile"
+      v-model="mobileDrawerVisible"
+      direction="ltr"
+      :size="defaultSettings.layout.sidebarWidth"
+      :show-close="false"
+      :with-header="false"
+      class="mobile-sidebar-drawer"
     >
       <Sidebar />
-    </el-aside>
+    </el-drawer>
 
     <el-container
       class="layout-main"
-      :style="fixedSidebar ? { marginLeft: `${sidebarWidth}px` } : {}"
+      :style="!isMobile && fixedSidebar ? { marginLeft: `${sidebarWidth}px` } : {}"
     >
-      <el-header class="layout-header" :height="themeStore.tabsEnabled ? '80px' : '50px'">
+      <el-header
+        :class="['layout-header', { 'is-mobile': isMobile }]"
+        :height="themeStore.tabsEnabled ? (isMobile ? '92px' : '80px') : (isMobile ? '50px' : '50px')"
+      >
         <Header />
         <Tabs v-if="themeStore.tabsEnabled" />
       </el-header>
 
-      <el-main class="layout-content">
+      <el-main :class="['layout-content', { 'is-mobile': isMobile }]">
         <router-view v-slot="{ Component, route }">
           <transition :name="themeStore.animation ? 'fade-slide' : ''" mode="out-in">
             <keep-alive :include="[]">
@@ -49,7 +101,7 @@ const showFooter = computed(() => defaultSettings.layout.showFooter)
       </el-main>
 
       <el-footer v-if="showFooter" class="layout-footer" height="40px">
-        <span>© 2026 Aohoyo Admin</span>
+        <span>&copy; 2026 Aohoyo Admin</span>
       </el-footer>
     </el-container>
   </el-container>
@@ -105,6 +157,10 @@ const showFooter = computed(() => defaultSettings.layout.showFooter)
   overflow: auto;
 }
 
+.layout-content.is-mobile {
+  padding: 12px 8px;
+}
+
 .layout-footer {
   display: flex;
   align-items: center;
@@ -112,6 +168,21 @@ const showFooter = computed(() => defaultSettings.layout.showFooter)
   background-color: transparent;
   color: var(--el-text-color-secondary);
   font-size: 12px;
+}
+
+/* 移动端侧边栏抽屉样式 */
+.layout-container :deep(.mobile-sidebar-drawer) {
+  background: var(--sidebar-bg);
+}
+
+.layout-container :deep(.mobile-sidebar-drawer .el-drawer__body) {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* 移动端遮罩层优化 */
+.layout-container :deep(.el-overlay) {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .fade-slide-enter-active,

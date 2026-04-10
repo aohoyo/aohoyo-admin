@@ -3,8 +3,10 @@ import { ref, reactive, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import { useResponsive } from '@/composables/useResponsive'
 
 const userStore = useUserStore()
+const { isMobile } = useResponsive()
 
 // 用户信息
 const userInfo = computed(() => userStore.userInfo)
@@ -89,12 +91,12 @@ const handleChangePassword = async () => {
 
 <template>
   <div class="page-container">
-    <el-row :gutter="20">
+    <el-row :gutter="isMobile ? 0 : 20">
       <!-- 左侧用户卡片 -->
-      <el-col :span="8">
-        <el-card>
+      <el-col :xs="24" :sm="24" :md="8">
+        <el-card :class="{ 'mb-4': isMobile }">
           <div class="user-card">
-            <el-avatar :size="100">
+            <el-avatar :size="isMobile ? 80 : 100">
               {{ userInfo?.nickname?.charAt(0) || 'A' }}
             </el-avatar>
             <h3 class="username">{{ userInfo?.nickname || '用户' }}</h3>
@@ -126,7 +128,7 @@ const handleChangePassword = async () => {
       </el-col>
 
       <!-- 右侧设置 -->
-      <el-col :span="16">
+      <el-col :xs="24" :sm="24" :md="16">
         <el-card>
           <el-tabs v-model="activeTab">
             <!-- 基本信息 -->
@@ -199,8 +201,8 @@ const handleChangePassword = async () => {
 </template>
 
 <style scoped>
-.page-container {
-  padding: 20px;
+.mb-4 {
+  margin-bottom: 16px;
 }
 
 .user-card {
@@ -223,6 +225,6 @@ const handleChangePassword = async () => {
   justify-content: center;
   gap: 8px;
   padding: 8px 0;
-  color: var(--text-color-secondary);
+  color: var(--el-text-color-secondary);
 }
 </style>
