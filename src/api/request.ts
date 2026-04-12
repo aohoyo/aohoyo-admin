@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type {
+  AxiosError,
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
@@ -90,8 +91,9 @@ const logger = {
     console.groupEnd()
   },
 
-  error(error: unknown) {
+  error(err: unknown) {
     if (!this.enabled) return
+    const error = err as AxiosError
     const url = error.config?.url || 'unknown'
 
     console.group(`%c❌ API Error: ${url}`, 'color: #f56c6c; font-weight: bold; font-size: 13px;')
@@ -144,7 +146,7 @@ service.interceptors.response.use(
 
     // 业务成功
     if (data.code === 200) {
-      return data.data as any
+      return data.data
     }
 
     // 业务失败
@@ -161,7 +163,8 @@ service.interceptors.response.use(
       const message = HTTP_STATUS[response.status] || `服务器错误: ${response.status}`
 
       // 401 未授权
-      if (response.status === 401) {
+      if (response.status === 401 && !error.config._retrying) {
+        error.config._retrying = true
         ElMessageBox.confirm('登录已过期，请重新登录', '提示', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',

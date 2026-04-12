@@ -184,19 +184,24 @@ const handleDelete = (row: typeof formData) => {
   }).then(() => {
     ElMessage.success('删除成功')
     loadData()
-  })
+  }).catch(() => {})
 }
 
 // 提交
+const submitting = ref(false)
 const handleSubmit = async () => {
-  if (!formRef.value) return
-  await formRef.value.validate(valid => {
-    if (valid) {
-      ElMessage.success(formData.id ? '修改成功' : '新增成功')
-      dialogVisible.value = false
-      loadData()
-    }
-  })
+  if (!formRef.value || submitting.value) return
+  submitting.value = true
+  try {
+    await formRef.value.validate()
+    ElMessage.success(formData.id ? '修改成功' : '新增成功')
+    dialogVisible.value = false
+    loadData()
+  } catch {
+    // 验证失败
+  } finally {
+    submitting.value = false
+  }
 }
 
 // 重置表单

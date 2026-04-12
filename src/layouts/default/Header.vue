@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
@@ -19,6 +19,13 @@ const themeSettingRef = ref()
 const currentLocale = ref(getLocaleValue())
 
 const isMobile = computed(() => appStore.device === 'mobile')
+
+const refreshPage = async () => {
+  const route = router.currentRoute.value
+  router.replace('/redirect' + route.fullPath)
+  await nextTick()
+  router.replace(route.fullPath)
+}
 
 const languages = [
   { label: '简体中文', value: 'zh-CN' },
@@ -121,7 +128,7 @@ const lockScreen = () => {
 
       <!-- 刷新 -->
       <el-tooltip v-if="themeStore.refreshEnabled && !isMobile" :content="t('common.refresh')">
-        <el-icon class="icon" @click="router.go(0)"><Refresh /></el-icon>
+        <el-icon class="icon" @click="refreshPage"><Refresh /></el-icon>
       </el-tooltip>
 
       <!-- 用户 -->

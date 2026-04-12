@@ -36,14 +36,18 @@ const mobileDrawerVisible = computed({
 
 // 响应式监听
 const MOBILE_BREAKPOINT = 768
+let resizeTimer: ReturnType<typeof setTimeout>
 
 const handleResize = () => {
-  const width = window.innerWidth
-  if (width < MOBILE_BREAKPOINT) {
-    appStore.setDevice('mobile')
-  } else {
-    appStore.setDevice('desktop')
-  }
+  clearTimeout(resizeTimer)
+  resizeTimer = setTimeout(() => {
+    const width = window.innerWidth
+    if (width < MOBILE_BREAKPOINT) {
+      appStore.setDevice('mobile')
+    } else {
+      appStore.setDevice('desktop')
+    }
+  }, 150)
 }
 
 onMounted(() => {

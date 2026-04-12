@@ -1,4 +1,4 @@
-import type { Directive, DirectiveBinding } from 'vue'
+import type { Directive, DirectiveBinding, App } from 'vue'
 import { useUserStore } from '@/stores/user'
 
 /**

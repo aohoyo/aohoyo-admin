@@ -2,12 +2,9 @@ import { ref, reactive } from 'vue'
 import type { Ref } from 'vue'
 
 interface TableOptions<T> {
-  // 请求方法
-  fetchFn: (params: any) => Promise<{ list: T[]; total: number }>
-  // 默认分页
+  fetchFn: (params: Record<string, unknown>) => Promise<{ list: T[]; total: number }>
   defaultPageSize?: number
-  // 默认参数
-  defaultParams?: Record<string, any>
+  defaultParams?: Record<string, unknown>
 }
 
 interface Pagination {
@@ -20,12 +17,11 @@ interface TableState<T> {
   loading: Ref<boolean>
   data: Ref<T[]>
   pagination: Pagination
-  params: Record<string, any>
-  // 方法
+  params: Record<string, unknown>
   loadData: () => Promise<void>
   handlePageChange: (page: number) => void
   handleSizeChange: (size: number) => void
-  handleSearch: (searchParams: Record<string, any>) => void
+  handleSearch: (searchParams: Record<string, unknown>) => void
   handleReset: () => void
   refresh: () => void
 }
@@ -33,7 +29,7 @@ interface TableState<T> {
 /**
  * 表格通用 Hook
  */
-export function useTable<T = any>(options: TableOptions<T>): TableState<T> {
+export function useTable<T = unknown>(options: TableOptions<T>): TableState<T> {
   const { fetchFn, defaultPageSize = 10, defaultParams = {} } = options
 
   // 加载状态
@@ -50,7 +46,7 @@ export function useTable<T = any>(options: TableOptions<T>): TableState<T> {
   })
 
   // 查询参数
-  const params = reactive<Record<string, any>>({ ...defaultParams })
+  const params = reactive<Record<string, unknown>>({ ...defaultParams })
 
   // 加载数据
   const loadData = async () => {
@@ -84,7 +80,7 @@ export function useTable<T = any>(options: TableOptions<T>): TableState<T> {
   }
 
   // 搜索
-  const handleSearch = (searchParams: Record<string, any>) => {
+  const handleSearch = (searchParams: Record<string, unknown>) => {
     Object.assign(params, searchParams)
     pagination.page = 1
     loadData()

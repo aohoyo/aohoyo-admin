@@ -34,7 +34,11 @@ export default defineConfig({
       output: {
         chunkFileNames: 'static/js/[name]-[hash].js',
         entryFileNames: 'static/js/[name]-[hash].js',
-        assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+        assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+        manualChunks: {
+          'vue-vendor': ['vue', 'vue-router', 'pinia'],
+          'element-plus': ['element-plus']
+        }
       }
     }
   }

@@ -122,6 +122,16 @@ export const asyncRoutes: RouteRecordRaw[] = [
       }
     ]
   },
+  // 刷新重定向
+  {
+    path: '/redirect/:path(.*)',
+    component: () => import('@/layouts/default/index.vue'),
+    beforeEnter: (to) => {
+      const path = '/' + (to.params.path as string[]).join('/')
+      return path
+    },
+    meta: { hidden: true }
+  },
   // 404 必须放在最后
   {
     path: '/:pathMatch(.*)*',
