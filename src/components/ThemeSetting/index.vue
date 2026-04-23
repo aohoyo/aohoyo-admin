@@ -8,11 +8,18 @@ const themeStore = useThemeStore()
 const visible = ref(false)
 
 const presets = computed(() => themeStore.presets)
-const customColor = ref(themeStore.primaryColor)
+const customColor = ref<string | null>(themeStore.primaryColor)
 
-const handleSelectColor = (color: string) => {
-  themeStore.setPrimaryColor(color)
-  customColor.value = color
+const handleSelectColor = (color: string | null) => {
+  if (color) {
+    themeStore.setPrimaryColor(color)
+    customColor.value = color
+  }
+}
+
+const handleSelectRadius = (val: number | number[]) => {
+  const radius = Array.isArray(val) ? val[0] : val
+  themeStore.setBorderRadius(radius)
 }
 
 const open = () => {
@@ -61,7 +68,7 @@ defineExpose({ open })
           :model-value="themeStore.borderRadius"
           :min="0"
           :max="16"
-          @input="themeStore.setBorderRadius"
+          @input="handleSelectRadius"
         />
       </div>
 

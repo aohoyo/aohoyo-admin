@@ -9,14 +9,16 @@ import { useResponsive } from '@/composables/useResponsive'
 // ECharts tree-shaking 按需引入
 import * as echarts from 'echarts/core'
 import { LineChart } from 'echarts/charts'
-import {
-  TooltipComponent,
-  GridComponent,
-  LegendComponent
-} from 'echarts/components'
+import { TooltipComponent, GridComponent, LegendComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import type { ECharts } from 'echarts/core'
 import type { LineSeriesOption } from 'echarts/charts'
+
+// 解构模板中使用的全局对象
+const router = useRouter()
+const { t } = useI18n()
+const userStore = useUserStore()
+const { isMobile } = useResponsive()
 
 // 注册必要的组件（tree-shaking 需要显式注册）
 echarts.use([LineChart, TooltipComponent, GridComponent, LegendComponent, CanvasRenderer])
@@ -36,7 +38,7 @@ let chart: ECharts | null = null
 function initChart() {
   if (!chartRef.value) return
   chart = echarts.init(chartRef.value)
-  chart.setOption<LineSeriesOption>({
+  chart.setOption({
     tooltip: { trigger: 'axis' },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {

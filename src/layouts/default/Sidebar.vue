@@ -133,7 +133,7 @@ const toggleCollapse = () => {
           </el-sub-menu>
 
           <!-- 无子菜单 -->
-          <el-menu-item v-else :index="item.redirect || item.path">
+          <el-menu-item v-else :index="(item.redirect || item.path) as string">
             <el-icon v-if="item.meta?.icon"><component :is="item.meta.icon" /></el-icon>
             <template #title>{{ t(item.meta?.title as string) }}</template>
           </el-menu-item>
