@@ -10,6 +10,9 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
     "format": "prettier --write src/",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "prepare": "husky install"
   },
   "author": "aohoyo",
@@ -47,6 +50,7 @@
     "lint-staged": "^16.4.0",
     "mockjs": "^1.1.0",
     "prettier": "^3.8.1",
+    "rollup-plugin-visualizer": "^7.0.1",
     "sass": "^1.98.0",
     "sharp": "^0.34.5",
     "typescript": "~5.9.3",

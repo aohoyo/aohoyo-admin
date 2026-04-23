@@ -6,6 +6,7 @@ import { resolve } from 'path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,6 +26,13 @@ export default defineConfig({
     viteMockServe({
       mockPath: 'mock',
       enable: process.env.NODE_ENV === 'development'
+    }),
+    // 体积分析报告
+    visualizer({
+      filename: 'dist/report.html',
+      open: false,
+      gzipSize: true,
+      brotliSize: true
     })
   ],
   resolve: {
@@ -45,8 +53,6 @@ export default defineConfig({
     }
   },
   build: {
-    // Element Plus 按需引入后不再需要 manualChunks 分包
-    // 全部由 unplugin-vue-components 自动按需打包
     rollupOptions: {
       output: {
         chunkFileNames: 'static/js/[name]-[hash].js',
