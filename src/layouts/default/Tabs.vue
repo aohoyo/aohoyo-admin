@@ -1,4 +1,4 @@
-<script setup lang="ts">
+/<script setup lang="ts">
 import { computed, watch, ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -25,10 +25,19 @@ const contextMenuVisible = ref(false)
 const contextMenuPosition = ref({ x: 0, y: 0 })
 const selectedTab = ref<string>('')
 
+// 标志：store 持久化数据是否已恢复
+// 首次路由变化（来自 watch immediate）不写入 store，由 persist 接管
+let storeRestored = false
+
 // 监听路由变化，添加标签
 watch(
   () => route.path,
   () => {
+    if (!storeRestored) {
+      // 首次触发是 watch immediate，来自 persist 恢复的已有标签，不重复添加
+      storeRestored = true
+      return
+    }
     if (route.meta?.title && !route.meta?.hidden) {
       tabsStore.addTab({
         path: route.path,
@@ -118,193 +127,3 @@ onUnmounted(() => {
   document.removeEventListener('click', closeContextMenu)
 })
 </script>
-
-<template>
-  <div class="tabs-container">
-    <el-scrollbar class="tabs-scroll">
-      <div class="tabs-wrapper">
-        <div
-          v-for="tab in tabList"
-          :key="tab.path"
-          :class="['tab-item', { 'is-active': activeTab === tab.path }]"
-          @click="handleClick(tab.path)"
-          @contextmenu="e => handleContextMenu(e, tab.path)"
-        >
-          <el-icon v-if="tab.icon && themeStore.tabsShowIcon" class="tab-icon">
-            <component :is="tab.icon" />
-          </el-icon>
-          <span class="tab-title">{{ tab.title }}</span>
-          <el-icon v-if="tabList.length > 1" class="tab-close" @click.stop="handleClose(tab.path)">
-            <Close />
-          </el-icon>
-        </div>
-      </div>
-    </el-scrollbar>
-
-    <!-- 右键菜单 -->
-    <Transition name="fade">
-      <div
-        v-if="contextMenuVisible"
-        class="context-menu"
-        :style="{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }"
-      >
-        <div class="menu-item" @click="refreshPage">
-          <el-icon><Refresh /></el-icon>
-          <span>{{ t('common.refresh') }}</span>
-        </div>
-        <div class="menu-item" @click="closeOther">
-          <el-icon><FolderRemove /></el-icon>
-          <span>{{ t('tabs.closeOther') }}</span>
-        </div>
-        <div class="menu-item" @click="closeLeft">
-          <el-icon><Back /></el-icon>
-          <span>{{ t('tabs.closeLeft') }}</span>
-        </div>
-        <div class="menu-item" @click="closeRight">
-          <el-icon><Right /></el-icon>
-          <span>{{ t('tabs.closeRight') }}</span>
-        </div>
-        <div class="menu-divider"></div>
-        <div class="menu-item danger" @click="closeAll">
-          <el-icon><CircleClose /></el-icon>
-          <span>{{ t('tabs.closeAll') }}</span>
-        </div>
-      </div>
-    </Transition>
-  </div>
-</template>
-
-<style scoped>
-.tabs-container {
-  display: flex;
-  align-items: center;
-  height: 44px;
-  padding: 0 12px;
-  background: var(--el-bg-color);
-  border-top: 1px solid var(--el-border-color-light);
-}
-
-.tabs-scroll {
-  flex: 1;
-  overflow: hidden;
-}
-
-.tabs-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-  padding-top: 4px;
-}
-
-.tab-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 12px;
-  height: 32px;
-  border-radius: 4px;
-  background: var(--el-fill-color-blank);
-  border: 1px solid var(--el-border-color);
-  color: var(--el-text-color-primary);
-  font-size: 14px;
-  cursor: pointer;
-  user-select: none;
-  transition: all 0.2s;
-}
-
-.tab-item:hover,
-.tab-item.is-active {
-  transform: translateY(-2px);
-}
-
-.tab-item:hover {
-  background: var(--el-color-primary-light-9);
-  border-color: var(--el-color-primary-light-5);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.tab-item.is-active {
-  background: var(--el-color-primary);
-  border-color: var(--el-color-primary);
-  color: var(--el-bg-color);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.tab-icon,
-.tab-title {
-  font-size: 14px;
-  color: inherit;
-}
-
-.tab-close {
-  font-size: 12px;
-  color: inherit;
-  margin-left: 2px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
-
-.tab-close:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-.tab-item.is-active .tab-close:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* 右键菜单 */
-.context-menu {
-  position: fixed;
-  z-index: 9999;
-  min-width: 120px;
-  padding: 4px 0;
-  background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-light);
-  border-radius: 4px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
-}
-
-.menu-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  color: var(--el-text-color-primary);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.menu-item:hover {
-  background: var(--el-color-primary-light-9);
-  color: var(--el-color-primary);
-}
-
-.menu-item.danger:hover {
-  background: var(--el-color-danger-light-9);
-  color: var(--el-color-danger);
-}
-
-.menu-item .el-icon {
-  font-size: 14px;
-  color: inherit;
-}
-.menu-divider {
-  height: 1px;
-  margin: 4px 0;
-  background: var(--el-border-color-lighter);
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.15s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

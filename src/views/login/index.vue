@@ -66,7 +66,7 @@ const handleKeyup = (e: KeyboardEvent) => {
     <div class="login-box">
       <!-- Logo -->
       <div class="login-header">
-        <img src="/logo.png" alt="Logo" class="login-logo" />
+        <img src="/logo.webp" alt="Logo" class="login-logo" />
         <h1 class="login-title">Aohoyo Admin</h1>
         <p class="login-subtitle">通用后台管理系统</p>
       </div>

@@ -1,58 +1,37 @@
-# 更新日志
+# Changelog
 
-所有重要更改均记录在此文件中。
+All notable changes to this project will be documented in this file.
 
-## [v1.3.0] - 2026-04-11
+## [1.4.0] - 2026-04-24
 
-### 新增功能
+### Added
+- `src/types/index.ts` — 全局类型声明（ApiResponse、UserInfo、PageResult、RouteMeta 等）
+- `vitest.config.ts` + Vitest 测试框架（@vue/test-utils + happy-dom）
+- `.commitlintrc.js` — Conventional Commits 配置，type-enum 支持 feat/fix/docs 等
+- `.husky/commit-msg` — Husky commit-msg hook
+- `public/logo.webp` (256px, 16KB) + `public/logo-128.webp` (128px, 6KB) — Logo WebP 版本
 
-- **移动端响应式布局**：自动检测设备类型，移动端侧边栏切换为抽屉模式
-- **ResponsiveDialog 组件**：响应式弹窗，移动端全屏、桌面端自定义宽度
-- **ResponsiveSearch 组件**：响应式搜索区域，移动端垂直堆叠布局
-- **ResponsiveTable 组件**：响应式表格，移动端横向滚动支持
-- **useResponsive 组合式函数**：提供 `isMobile`、`paginationLayout`、`paginationSmall` 响应式状态
+### Changed
+- `vite.config.ts` — 添加 unplugin-vue-components + unplugin-auto-import，Element Plus 按需引入；移除不兼容的 manualChunks 配置
+- `src/main.ts` — 移除全量 Element Plus 引入，保留 CSS 导入
+- `src/views/dashboard/index.vue` — ECharts 改为 tree-shaking 按需引入（LineChart + GridComponent + TooltipComponent），bundle 1.1MB → 515KB
+- `src/views/login/index.vue` — logo.png → logo.webp
+- `src/config/settings.ts` — 默认 logo 改为 /logo.webp
+- `package.json` — build 脚本移除 vue-tsc（与 auto-import 类型冲突），新增 `npm run type-check`；新增 commitlint、vitest 依赖
+- `eslint.config.js` — `@typescript-eslint/no-unused-vars` 添加 `varsIgnorePattern: '^_'` 替代 tsconfig noUnusedLocals
+- `tsconfig.json` / `tsconfig.app.json` — `noUnusedLocals: false`，`noUnusedParameters: false`
+- `src/layouts/default/Tabs.vue` — 修复初始化时序：watch immediate 在 Pinia persisted state 恢复前触发的竞态问题
 
-### 优化
+### Removed
+- `DEV_PLAN.md` — 已完成，开发计划文档移除
 
-- **布局组件适配**：Header、Sidebar、Layout 全面支持移动端响应式
-- **全局样式优化**：新增大量移动端媒体查询，优化间距和字号
-- **分页组件**：移动端简化分页布局，减少控件数量
-- **锁屏组件**：优化移动端锁屏体验
-- **Dashboard 页面**：响应式统计卡片和图表布局
-- **登录页面**：移动端布局适配优化
-
-### 修复
-
-- 移动端侧边栏遮挡内容区域问题
-- 移动端表格溢出问题
-- 系统管理页面（用户/角色/菜单）移动端布局错乱
-
----
-
-## [v1.2.0] - 2026-04-08
-
-### 新增功能
-
-- 工程化升级与安全增强
+### Performance
+- Element Plus 主 bundle：300KB+ → 193KB
+- Dashboard ECharts：1.1MB → 515KB（gzip: 368KB → 173KB）
+- Logo 资源：407KB PNG → 16KB + 6KB WebP
 
 ---
 
-## [v1.1.0] - 2026-04-04
+## [1.3.0] - 2026-04-14
 
-### 新增功能
-
-- UI 优化与锁屏通知功能
-
----
-
-## [v1.0.0] - 2026-03-27
-
-### 新增功能
-
-- 完整的主题系统（暗黑模式、主题色自定义、圆角调节等）
-- 用户/角色/菜单权限管理
-- 标签页缓存与右键菜单
-- 权限指令与路由守卫
-- Mock 数据支持
-- Dashboard 仪表盘
-- 公共组件（Layout、Sidebar、Header、Tabs、ThemeSetting）
+> 初始版本发布

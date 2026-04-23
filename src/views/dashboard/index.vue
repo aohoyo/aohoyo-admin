@@ -5,12 +5,21 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import { useResponsive } from '@/composables/useResponsive'
-import * as echarts from 'echarts'
 
-const { t } = useI18n()
-const router = useRouter()
-const userStore = useUserStore()
-const { isMobile } = useResponsive()
+// ECharts tree-shaking 按需引入
+import * as echarts from 'echarts/core'
+import { LineChart } from 'echarts/charts'
+import {
+  TooltipComponent,
+  GridComponent,
+  LegendComponent
+} from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+import type { ECharts } from 'echarts/core'
+import type { LineSeriesOption } from 'echarts/charts'
+
+// 注册必要的组件（tree-shaking 需要显式注册）
+echarts.use([LineChart, TooltipComponent, GridComponent, LegendComponent, CanvasRenderer])
 
 // 统计数据
 const stats = ref([
@@ -22,12 +31,12 @@ const stats = ref([
 
 // ECharts
 const chartRef = ref<HTMLDivElement>()
-let chart: echarts.ECharts | null = null
+let chart: ECharts | null = null
 
 function initChart() {
   if (!chartRef.value) return
   chart = echarts.init(chartRef.value)
-  chart.setOption({
+  chart.setOption<LineSeriesOption>({
     tooltip: { trigger: 'axis' },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {

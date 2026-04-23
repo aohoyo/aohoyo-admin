@@ -27,9 +27,16 @@ export default [
       'vue/require-default-prop': 'off',
       'vue/require-explicit-emits': 'warn',
 
-      // TypeScript 规则
+      // TypeScript 规则（替代 tsconfig noUnusedLocals）
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',       // 以下划线开头的参数（如 _event）
+          varsIgnorePattern: '^_',      // 以下划线开头的变量
+          caughtErrorsIgnorePattern: '^_' // try-catch 的 error
+        }
+      ],
 
       // 通用规则
       'no-console': 'warn',

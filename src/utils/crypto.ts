@@ -1,9 +1,12 @@
 /**
  * AES-GCM 加密工具（用于锁屏密码）
- * 使用 Web Crypto API 进行真正的对称加密
+ * 使用 Web Crypto API 进行对称加密
+ *
+ * 密钥派生：VITE_LOCK_SCREEN_SECRET → SHA-256 → AES-256-GCM
+ * 未配置时使用默认值（二次开发时建议在 .env 中设置自己的密钥）
  */
 
-const KEY_MATERIAL = 'aohoyo-admin-lock-screen-v2'
+const KEY_MATERIAL = import.meta.env.VITE_LOCK_SCREEN_SECRET || 'aohoyo-admin-lock-screen-v2'
 const ALGO = 'AES-GCM'
 const IV_LENGTH = 12
 

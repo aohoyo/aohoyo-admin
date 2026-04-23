@@ -1,10 +1,18 @@
 /**
  * 全局配置文件
+ *
+ * 所有可通过环境变量覆盖的配置均从 VITE_APP_* 读取，
+ * 确保二次开发时无需修改代码，只需修改 .env 文件即可。
  */
 
 export default {
-  title: 'Aohoyo Admin',
-  logo: '/logo.png',
+  // 项目名称（来自环境变量，默认 "Aohoyo Admin"）
+  title: import.meta.env.VITE_APP_TITLE || 'Aohoyo Admin',
+
+  // Logo 路径（来自环境变量，默认 "/logo.png"）
+  logo: import.meta.env.VITE_APP_LOGO || '/logo.webp',
+
+  // API 基础地址
   baseUrl: import.meta.env.VITE_APP_BASE_API || '/api',
 
   // 标签页
