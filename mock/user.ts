@@ -132,28 +132,5 @@ export default [
       mockLog('POST', '/api/auth/logout', {}, response)
       return response
     }
-  },
-
-  // 获取用户列表
-  {
-    url: '/api/system/user/list',
-    method: 'get',
-    response: ({ query }: { query: { page?: number; pageSize?: number; keyword?: string } }) => {
-      const { page = 1, pageSize = 10, keyword = '' } = query
-      let filtered = mockUsers
-      if (keyword) {
-        const kw = keyword.toLowerCase()
-        filtered = mockUsers.filter(u => u.username.includes(kw) || u.nickname.includes(kw))
-      }
-      const start = (page - 1) * pageSize
-      const list = filtered.slice(start, start + pageSize)
-      const response = {
-        code: 200,
-        data: { list, total: filtered.length },
-        message: 'success'
-      }
-      mockLog('GET', '/api/system/user/list', query, response)
-      return response
-    }
   }
 ] as MockMethod[]

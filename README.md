@@ -18,6 +18,7 @@
 ## 功能特性
 
 ### 🎨 主题系统
+
 - ✅ 暗黑模式切换
 - ✅ 主题色自定义（5 种预设 + 自定义颜色选择器）
 - ✅ 侧边栏/头部独立主题设置
@@ -25,6 +26,7 @@
 - ✅ 灰色模式 / 色弱模式
 
 ### 🔐 权限管理
+
 - ✅ 用户管理（增删改查、状态切换）
 - ✅ 角色管理（权限分配）
 - ✅ 菜单管理（树形结构、图标选择器）
@@ -32,6 +34,7 @@
 - ✅ 角色指令 `v-role`
 
 ### 📄 页面组件
+
 - ✅ 登录页面
 - ✅ Dashboard 仪表盘
 - ✅ 个人中心（修改密码、个人信息）
@@ -40,6 +43,7 @@
 - ✅ 404 页面
 
 ### 🧩 公共组件
+
 - ✅ Layout 布局
 - ✅ Sidebar 侧边栏（可折叠）
 - ✅ Header 头部
@@ -52,12 +56,14 @@
 - ✅ LockScreen 锁屏组件
 
 ### 📱 移动端适配
+
 - ✅ 响应式布局（自动检测设备类型）
 - ✅ useResponsive 组合式函数
 - ✅ 移动端侧边栏抽屉模式
 - ✅ 弹窗/表格/搜索区域移动端优化
 
 ### 🔧 工具库
+
 - ✅ Axios 请求封装（拦截器、错误处理）
 - ✅ API 模块化管理
 - ✅ Mock 数据支持
@@ -71,10 +77,12 @@
 ## 快速开始
 
 ### 环境要求
+
 - Node.js >= 20.0.0
 - npm >= 10.0.0
 
 ### 安装
+
 ```bash
 git clone https://github.com/aohoyo/aohoyo-admin.git
 cd aohoyo-admin
@@ -82,24 +90,28 @@ npm install
 ```
 
 ### 开发
+
 ```bash
 npm run dev
 # 访问 http://localhost:33520
 ```
 
 ### 生产构建
+
 ```bash
 npm run build
 ```
 
 ### 预览构建结果
+
 ```bash
 npm run preview
 ```
 
 ### 默认账号
-| 账号 | 密码 |
-|------|------|
+
+| 账号  | 密码     |
+| ----- | -------- |
 | admin | admin123 |
 
 ---
@@ -113,16 +125,19 @@ npm run preview
 修改 3 个地方：
 
 **① 环境变量**（`.env.development` / `.env.production`）
+
 ```env
 VITE_APP_TITLE=我的新后台
 ```
 
 **② HTML 标题**（`index.html`）
+
 ```html
 <title>我的新后台</title>
 ```
 
 **③ 路由标题**（`src/config/settings.ts`，后续 P0-2 会改用环境变量）
+
 ```ts
 export default {
   title: '我的新后台',   // 改这里
@@ -137,6 +152,7 @@ public/logo.png   →  替换成你的 SVG/PNG（保持文件名一致）
 ```
 
 或在 `src/config/settings.ts` 中单独配置：
+
 ```ts
 logo: '/my-logo.png',  // 自定义路径
 ```
@@ -144,6 +160,7 @@ logo: '/my-logo.png',  // 自定义路径
 #### 第三步：接入真实 API
 
 **① 修改 API 基础地址**（`.env.development`）
+
 ```env
 VITE_APP_BASE_API=https://your-api.com/api
 ```
@@ -151,6 +168,7 @@ VITE_APP_BASE_API=https://your-api.com/api
 **② 替换 Mock 数据**
 
 Mock 数据在 `mock/` 目录下，接口对应关系：
+
 ```
 src/api/modules/   →   mock/
 ```
@@ -158,6 +176,7 @@ src/api/modules/   →   mock/
 删除或修改 `mock/` 中的 `.ts` 文件，编写你的真实接口（参考 `src/api/modules/user.ts`）。
 
 **③ 移除 Mock 插件**（`vite.config.ts`）
+
 ```ts
 // 注释掉或删除这一行：
 import { viteMockServe } from 'vite-plugin-mock'
@@ -166,6 +185,7 @@ import { viteMockServe } from 'vite-plugin-mock'
 **④ 修改 Axios 封装**（`src/api/request.ts`）
 
 根据真实后端调整：
+
 - 认证方式（Token / JWT / Cookie）
 - 响应数据格式（当前假设 `{ code, data, message }`）
 - 错误码处理
@@ -188,6 +208,7 @@ import { viteMockServe } from 'vite-plugin-mock'
 ```
 
 在需要权限的页面组件上使用指令：
+
 ```vue
 <el-button v-permission="'admin'">仅管理员可见</el-button>
 <el-button v-role="['editor', 'admin']">编辑者和管理员可见</el-button>
@@ -321,51 +342,66 @@ features: {
 
 ## 环境变量
 
-| 变量名 | 说明 | 默认值 |
-|--------|------|--------|
-| `VITE_APP_TITLE` | 项目标题（显示在浏览器标签和登录页） | `Aohoyo Admin` |
-| `VITE_APP_BASE_API` | API 基础地址 | `/api` |
-| `VITE_APP_ENV` | 环境标识 | `development` / `production` |
+| 变量名              | 说明                                 | 默认值                       |
+| ------------------- | ------------------------------------ | ---------------------------- |
+| `VITE_APP_TITLE`    | 项目标题（显示在浏览器标签和登录页） | `Aohoyo Admin`               |
+| `VITE_APP_BASE_API` | API 基础地址                         | `/api`                       |
+| `VITE_APP_ENV`      | 环境标识                             | `development` / `production` |
 
 ### 开发环境变量文件：`.env.development`
+
 ### 生产环境变量文件：`.env.production`
 
 ---
 
 ## 浏览器支持
 
-| 浏览器 | 支持版本 |
-|--------|----------|
-| Chrome | 最新 2 版本 |
+| 浏览器  | 支持版本    |
+| ------- | ----------- |
+| Chrome  | 最新 2 版本 |
 | Firefox | 最新 2 版本 |
-| Safari | 最新 2 版本 |
-| Edge | 最新 2 版本 |
+| Safari  | 最新 2 版本 |
+| Edge    | 最新 2 版本 |
 
 ---
 
 ## 更新日志
 
+### v1.5.0 (2026-04-24)
+
+- Dashboard chunk: 1.1MB -> 4.26KB (-99.6%) via manualChunks
+- Dashboard gzip: 368KB -> 1.97KB
+- Fix Tabs initialization timing (onMounted + immediately flag)
+- Fix vue-tsc type errors (dashboard bindings, ThemeSetting props, Sidebar redirect)
+- Element Plus on-demand import + unplugin-vue-components
+- Logo converted to WebP (407KB -> 6KB + 16KB)
+
+### v1.4.0 (2026-04-24)
+
+- Add Vitest unit tests (17 tests, covers app/user/tabs/permission stores)
+- Add GitHub Actions CI (lint -> type-check -> test -> build)
+- Add rollup-plugin-visualizer bundle analysis (dist/report.html)
+- Add src/types/index.ts global type declarations
+- Add commitlint + Husky commit-msg hook (Conventional Commits)
+- ECharts on-demand import (LineChart + PieChart)
+- vite.config.ts: ElementPlusResolver + manualChunks
+- .eslintrc.js: varsIgnorePattern for unused vars
+- Remove DEV_PLAN.md, vite-plugin-compression
+
 ### v1.3.1 (2026-04-24)
-- 📖 完善 README，补充二次开发指引
-- 🔧 P0 开发阶段：模板变量化整理
+
+- Improve README, add secondary development guide
 
 ### v1.3.0 (2026-04-11)
-- 📱 移动端适配 - 响应式布局/通用组件/全局样式优化
-- ✅ 新增 ResponsiveDialog / ResponsiveSearch / ResponsiveTable 组件
-- ✅ 新增 useResponsive 组合式函数
-- ✅ 布局组件移动端适配
-- ✅ 全局响应式样式优化
+
+- Mobile responsive layout
+- Add ResponsiveDialog / ResponsiveSearch / ResponsiveTable
+- Add useResponsive composable
 
 ### v1.0.0 (2026-03-27)
-- 🎉 初始版本发布
-- ✅ 完整的主题系统
-- ✅ 用户/角色/菜单管理
-- ✅ 标签页缓存与右键菜单
-- ✅ 权限指令与路由守卫
-- ✅ Mock 数据支持
+
+- Initial release
 
 ---
 
 ## 许可证
-
-[MIT](LICENSE) © 2026 Aohoyo
