@@ -11,7 +11,14 @@ export default [
 
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/node_modules/**', '**/public/**', '**/*.d.ts', '**/*.local']
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/public/**',
+      '**/*.d.ts',
+      '**/*.local',
+      '**/*.cjs'
+    ]
   },
 
   js.configs.recommended,
@@ -32,9 +39,9 @@ export default [
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
-          argsIgnorePattern: '^_',       // 以下划线开头的参数（如 _event）
-          varsIgnorePattern: '^_',      // 以下划线开头的变量
-          caughtErrorsIgnorePattern: '^_' // try-catch 的 error
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_'
         }
       ],
 

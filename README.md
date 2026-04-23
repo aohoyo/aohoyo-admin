@@ -1,8 +1,8 @@
 # aohoyo-admin
 
-Vue 3 management后台模板，基于 Vite + Pinia + Element Plus。
+Vue 3 管理后台模板，基于 Vite + Pinia + Element Plus。
 
-## Tech Stack
+## 技术栈
 
 - Vue 3 + Composition API + TypeScript
 - Vite 6 (ESM)
@@ -13,7 +13,7 @@ Vue 3 management后台模板，基于 Vite + Pinia + Element Plus。
 - Vitest (单元测试)
 - ESLint + commitlint
 
-## Quick Start
+## 快速开始
 
 ```bash
 npm install
@@ -21,9 +21,9 @@ npm run dev
 npm run build
 ```
 
-## Dev Commands
+## 开发命令
 
-| Command                 | Description         |
+| 命令                    | 说明                |
 | ----------------------- | ------------------- |
 | `npm run dev`           | 启动开发服务器      |
 | `npm run build`         | 生产构建            |
@@ -34,7 +34,7 @@ npm run build
 | `npm run test`          | 运行单元测试        |
 | `npm run test:coverage` | 测试覆盖率报告      |
 
-## Project Structure
+## 项目结构
 
 ```
 src/
