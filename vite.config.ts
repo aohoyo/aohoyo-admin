@@ -16,7 +16,7 @@ export default defineConfig({
       dts: 'src/auto-imports.d.ts'
     }),
     Components({
-      resolvers: [ElementPlusResolver({ importStyle: false })],
+      resolvers: [ElementPlusResolver()],
       dts: 'src/components.d.ts'
     }),
     viteMockServe({
