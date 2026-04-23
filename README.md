@@ -18,7 +18,6 @@ Vue 3 管理后台模板，基于 Vite + Pinia + Element Plus。
 ```bash
 npm install
 npm run dev
-npm run build
 ```
 
 ## 开发命令
