@@ -12,14 +12,14 @@ import { visualizer } from 'rollup-plugin-visualizer'
 export default defineConfig({
   plugins: [
     vue(),
-    // Element Plus 按需引入 + 自动导入（API/组件/hooks）
+    // AutoImport 只处理 Vue/Router/Pinia hooks，不再处理 ElementPlus 组件（避免 icons 全量导入）
     AutoImport({
-      resolvers: [ElementPlusResolver()],
       imports: ['vue', 'vue-router', 'pinia'],
       dts: 'src/auto-imports.d.ts'
     }),
+    // Element Plus 组件按需导入（不含 icons）
     Components({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [ElementPlusResolver({ importStyle: false })],
       dts: 'src/components.d.ts'
     }),
     Icons({ autoInstall: true }),
@@ -27,7 +27,6 @@ export default defineConfig({
       mockPath: 'mock',
       enable: process.env.NODE_ENV === 'development'
     }),
-    // 体积分析报告
     visualizer({
       filename: 'dist/report.html',
       open: false,
@@ -57,7 +56,18 @@ export default defineConfig({
       output: {
         chunkFileNames: 'static/js/[name]-[hash].js',
         entryFileNames: 'static/js/[name]-[hash].js',
-        assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+        assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+        manualChunks(id) {
+          if (id.includes('node_modules/echarts')) {
+            return 'echarts-vendor'
+          }
+          if (id.includes('node_modules/element-plus')) {
+            return 'element-plus-vendor'
+          }
+          if (id.includes('node_modules/@iconify')) {
+            return 'iconify-vendor'
+          }
+        }
       }
     }
   }
