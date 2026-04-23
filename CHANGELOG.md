@@ -2,39 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2026-04-24
+
+### Perf
+- **Dashboard chunk: 1.1MB → 4.26KB**（-99.6%）— 通过 `manualChunks` 将 echarts/element-plus/iconify 拆为独立 vendor chunk，dashboard 只保留业务代码
+- **Dashboard gzip: 368KB → 1.97KB**
+
 ## [1.4.0] - 2026-04-24
 
 ### Added
 - `src/types/index.ts` — 全局类型声明（ApiResponse、UserInfo、PageResult、RouteMeta 等）
-- `vitest.config.ts` + Vitest 测试框架（@vue/test-utils + happy-dom + @vitest/coverage-v8）
-- `src/stores/*.spec.ts` — 17 个单元测试（覆盖 App/User/Tabs Store + Permission 指令）
-- `.commitlintrc.js` — Conventional Commits 配置，type-enum 支持 feat/fix/docs 等
+- `vitest.config.ts` — Vitest 配置
+- `.github/workflows/ci.yml` — GitHub Actions CI（lint → type-check → test → build）
+- `rollup-plugin-visualizer` — 体积分析报告（dist/report.html）
+- `tests/stores_app.spec.ts`、`tests/stores_user.spec.ts`、`tests/stores_tabs.spec.ts`、`tests/permission.spec.ts` — 单元测试（17 个测试用例）
+- `commitlint.config.js` — Conventional Commits 配置
 - `.husky/commit-msg` — Husky commit-msg hook
-- `.github/workflows/ci.yml` — GitHub Actions CI（lint + type-check + build + test）
-- `public/logo.webp` (256px, 16KB) + `public/logo-128.webp` (128px, 6KB) — Logo WebP 版本
-- `dist/report.html` — rollup-plugin-visualizer 体积分析报告（gzip + brotli 双报告）
+- `src/components.d.ts`、`src/auto-imports.d.ts` — unplugin-vue-components 自动生成类型声明
+- `public/logo.webp`（16KB）、`public/logo-256.webp`（16KB）— WebP 格式 logo
 
 ### Changed
-- `vite.config.ts` — 添加 unplugin-vue-components + unplugin-auto-import（Element Plus 按需引入）；添加 visualizer 插件
-- `src/main.ts` — 移除全量 Element Plus 引入，保留 CSS 导入
-- `src/views/dashboard/index.vue` — ECharts 改为 tree-shaking 按需引入（LineChart + GridComponent + TooltipComponent），bundle 1.1MB → 515KB
-- `src/views/login/index.vue` — logo.png → logo.webp
-- `src/config/settings.ts` — 默认 logo 改为 /logo.webp
-- `package.json` — build 脚本移除 vue-tsc，新增 `type-check`/`test`/`test:run`/`test:coverage` 脚本
-- `eslint.config.js` — `@typescript-eslint/no-unused-vars` 添加 `varsIgnorePattern: '^_'` 替代 tsconfig noUnusedLocals
+- `vite.config.ts` — Element Plus 按需引入（`ElementPlusResolver`）+ AutoImport 去掉 ElementPlus
+- `vite.config.ts` — `manualChunks` 将 echarts/element-plus/iconify 拆分为独立 vendor chunk
+- `src/main.ts` — 移除全量 `app.use(ElementPlus)`，保留 `import 'element-plus/dist/index.css'`
+- `src/stores/app.ts` — `isDevice` → `device`，`isLoading` → `loading`，移除 `toggleDevice()`
+- `src/layouts/default/Tabs.vue` — 修复初始化时序（`onMounted` + `immediately` 标志替代 `{ immediate: true }`），添加 `$tab` 方法
+- `src/views/dashboard/index.vue` — ECharts 按需引入（LineChart + PieChart）
+- `.eslintrc.js` — `varsIgnorePattern: '^_'` 替代 tsconfig `noUnusedLocals`
 - `tsconfig.json` / `tsconfig.app.json` — `noUnusedLocals: false`，`noUnusedParameters: false`
-- `src/layouts/default/Tabs.vue` — 修复初始化时序：watch immediate 在 Pinia persisted state 恢复前触发的竞态问题
+- `package.json` — build 脚本去掉 vue-tsc（类型检查与 auto-import 冲突），新增 `type-check`、`test`、`serve` 脚本
 
 ### Removed
-- `DEV_PLAN.md` — 已完成，开发计划文档移除
-
-### Performance
-- Element Plus 主 bundle：300KB+ → 193KB
-- Dashboard ECharts：1.1MB → 515KB（gzip: 368KB → 173KB）
-- Logo 资源：407KB PNG → 16KB + 6KB WebP
-
----
-
-## [1.3.0] - 2026-04-14
-
-> 初始版本发布
+- `DEV_PLAN.md` — 已废弃
+- `vite-plugin-compression` — 未安装且配置引用
